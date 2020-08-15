@@ -2,7 +2,7 @@ import Knex from 'knex';
 
 export async function up(knex: Knex) {
     return knex.schema.createTable('instituicao', table => {
-        table.increments('id_instituicao').primary();
+        table.increments('id_instituicao').primary().unsigned();
         table.string('emblema');
         table.string('cnpj').notNullable();
         table.string('nome').notNullable();
