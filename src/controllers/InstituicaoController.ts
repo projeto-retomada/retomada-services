@@ -34,7 +34,9 @@ export default class instituicaoController {
 
         } catch(err) {
             return response.status(500).json({
-                error: 'Erro ao inserir nova instituição'
+                error: 'Erro ao inserir nova instituição',
+                sqlMessage: err.sqlMessage,
+                sqlState: err.sqlState
             });
         } finally {
             db.destroy();
@@ -65,7 +67,86 @@ export default class instituicaoController {
             return response.status(200).json(query);
         } catch (err) {
             return response.status(500).json({
-                error: 'Erro ao consultar instituições'
+                error: 'Erro ao consultar instituições',
+                sqlMessage: err.sqlMessage,
+                sqlState: err.sqlState
+            });
+        } finally {
+            db.destroy();
+        }
+    }
+
+    async delete(request: Request, response: Response) {
+        const stringFilters = request.query.filters as string;
+        const filters = JSON.parse(stringFilters);
+
+        if(!filters || (!filters.cnpj && !filters.id_instituicao)) {
+            response.status(500).json({
+                error: 'Nenhum filtro de deleção foi informado'
+            });
+        }
+
+        try {
+            var query = await db('instituicao').where(function() {
+                //podemos excluir uma lista de cnpjs e/ou uma lista de ids
+                if(filters && filters.cnpj)
+                    this.whereIn('cnpj', filters.cnpj);
+                if(filters && filters.id_instituicao)
+                    this.whereIn('id_instituicao', filters.id_instituicao);
+            }).del().then(function(){
+                response.status(200).json ({
+                    message: 'Instituições deletadas com sucesso'
+                });
+            }); 
+        } catch (err) {
+            return response.status(500).json({
+                error: 'Erro ao deletar instituições',
+                sqlMessage: err.sqlMessage,
+                sqlState: err.sqlState
+            });
+        } finally {
+            db.destroy();
+        }
+    }
+
+    async edit(request: Request, response: Response) {
+        const stringFilters = request.query.filters as string;
+        const filters = JSON.parse(stringFilters);
+        const {
+            emblema,
+            cnpj,
+            nome,
+            metadata
+        } = request.body;
+
+        if(!filters || (!filters.cnpj && !filters.id_instituicao)) {
+            response.status(500).json({
+                error: 'Nenhum filtro de edição foi informado'
+            });
+        }
+
+        try {
+            var query = await db('instituicao')
+            .where(function() {
+                if(filters && filters.cnpj)
+                    this.whereIn('cnpj', filters.cnpj);
+                if(filters && filters.id_instituicao)
+                    this.whereIn('id_instituicao', filters.id_instituicao);
+            }).update({
+                emblema,
+                cnpj,
+                nome,
+                metadata
+            }).then(function(){
+                response.status(200).json ({
+                    message: 'Instituições editadas com sucesso'
+                });
+            }); 
+        } catch (err) {
+            return response.status(500).json({
+                error: 'Erro ao editar instituições',
+                sqlMessage: err.sqlMessage,
+                sqlState: err.sqlState
             });
         } finally {
             db.destroy();

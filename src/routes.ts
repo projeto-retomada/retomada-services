@@ -14,6 +14,8 @@ routes.post('/usuarios', usuarioController.create);
 
 routes.post('/create-institutions', instituicaoController.create);
 routes.get('/list-institutions', instituicaoController.index);
+routes.delete('/delete-institutions', instituicaoController.delete);
+routes.put('/edit-institutions', instituicaoController.edit);
 
 
 export default routes;
