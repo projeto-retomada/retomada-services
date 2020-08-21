@@ -30,8 +30,9 @@ export default class UsuarioController {
                 metadata,
                 tipo_usuario,
                 id_instituicao
+            }).then((usuario) => {
+                return response.status(201).json({id: usuario});
             });
-            return response.status(201);
         } catch (err) {
             return response.status(400).json({
                 error: 'Erro inesperado na criação do usuário',
@@ -44,8 +45,9 @@ export default class UsuarioController {
     async delete(request: Request, response: Response) {
         const { id } = request.params;
         try {
-            await db('usuario').where('id_usuario', id).del();
-            return response.status(200);
+            await db('usuario').where('id_usuario', id).del().then(() =>{
+                return response.status(200).json();
+            });
         } catch (err) {
             return response.status(400).json({
                 error: 'Erro inesperado na criação do usuário',
@@ -79,8 +81,9 @@ export default class UsuarioController {
                     metadata,
                     tipo_usuario,
                     id_instituicao
-                });
-            return response.status(200);
+            }).then(() => {
+                return response.status(200).json();
+            });
         } catch (err) {
             return response.status(400).json({
                 error: 'Erro inesperado na criação do usuário',
