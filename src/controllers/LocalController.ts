@@ -3,56 +3,65 @@ import { Response, Request} from  'express';
 import db from '../database/connection';
 import LogsController from './LogsController';
 
-export default class instituicaoController {
+export default class localController {
 
     logsController = new LogsController();
     tiposLog = {
-        EDITLOG: 'EDITAR-INSTITUICAO',
-        CREATELOG: 'CRIAR-INSTITUICAO',
-        EXCLUDELOG: 'EXCLUIR-INSTITUICAO',
-        LISTLOG: 'LISTAR-INSTITUICAO'
+        EDITLOG: 'EDITAR-LOCAL',
+        CREATELOG: 'CRIAR-LOCAL',
+        EXCLUDELOG: 'EXCLUIR-LOCAL',
+        LISTLOG: 'LISTAR-LOCAL'
     }
 
     async create(request: Request, response: Response) {
 
-        var nome_normalizado = request.body.nome;
-        nome_normalizado = nome_normalizado.normalize("NFD").replace(/[\u0300-\u036f]/g, "")
-        nome_normalizado = nome_normalizado.replace(' ','_');
-        nome_normalizado = nome_normalizado.toLocaleUpperCase();
-
-        const {
-            emblema,
-            cnpj,
-            nome,
-            metadata
+        var {
+            descricao,
+            lotacao_maxima,
+            aberto_fechado,
+            metadata,
+            id_instituicao,
+            id_usuario
         } = request.body;
 
-        if (!cnpj || !nome) 
+        if (!metadata) 
+            metadata = {};
+
+        if (!aberto_fechado || !descricao || !id_instituicao || !id_usuario) 
             return response.status(500).json({
                 error: 'Parâmetros requeridos não foram informados'
             });
 
+        var descricao_normalizada = descricao;
+        descricao_normalizada = descricao_normalizada.normalize("NFD").replace(/[\u0300-\u036f]/g, "")
+        descricao_normalizada = descricao_normalizada.replace(' ','_');
+        descricao_normalizada = descricao_normalizada.toLocaleUpperCase();
+
         try {
-            await db('instituicao').insert({
-                emblema,
-                cnpj,
-                nome,
-                nome_normalizado,
-                metadata
+            await db('local').insert({
+                criacao: db.fn.now(),
+                ultima_atualizacao: db.fn.now(),
+                descricao,
+                descricao_normalizada,
+                lotacao_maxima,
+                aberto_fechado,
+                metadata,
+                id_instituicao
             }).then(() => { 
                 response.status(200).json ({
-                    message: 'Instituição cadastrada com sucesso'
+                    message: 'Local cadastrado com sucesso'
                 });
           });
 
           //gerando log de criação de instituição 
           var conteudoEdicao = {
-            emblema,
-            cnpj,
-            nome,
-            metadata
+            descricao,
+            lotacao_maxima,
+            aberto_fechado,
+            metadata,
+            id_instituicao
           };
-          this.logsController.create(request.body.id_usuario as string, conteudoEdicao, this.tiposLog.CREATELOG);
+          this.logsController.create(id_usuario as string, conteudoEdicao, this.tiposLog.CREATELOG);
 
         } catch(err) {
             return response.status(500).json({
@@ -71,40 +80,41 @@ export default class instituicaoController {
 
         if (!filters.id_usuario) {
             return response.status(500).json({
-                error: 'O nome do usuário qu realizou a ação não foi informado'
+                error: 'O nome do usuário que realizou a ação não foi informado'
             });
         }
         
-        if(filters.nome) {
-            filters.nome = filters.nome.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
-            filters.nome = filters.nome.replace(' ','_');
-            filters.nome = filters.nome.toLocaleUpperCase();
-
-            console.log(filters.nome);
+        if(filters.descricao) {
+            filters.descricao = filters.descricao.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+            filters.descricao = filters.descricao.replace(' ','_');
+            filters.descricao = filters.descricao.toLocaleUpperCase();
         }
 
         try {
-            var query = await db('instituicao').select('*').where(function() {
+            var query = await db('local').select('*').where(function() {
                 if(filters.cnpj)
-                    this.where('cnpj', filters.cnpj);
+                    this.where('aberto_fechado', filters.aberto_fechado);
                 if(filters.id_instituicao)
                     this.where('id_instituicao', filters.id_instituicao);
                 if(filters.nome)
-                    this.where('nome_normalizado', 'LIKE', '%' + filters.nome + '%');
+                    this.where('descricao_normalizada', 'LIKE', '%' + filters.descricao + '%');
+                if(filters.id_local)
+                    this.where('id_local', filters.id_local);
             }); 
             
             //gerando log de criação de instituição 
             var conteudoListagem = {
-                cnpj: filters.cnpj,
-                id_instituicao: filters.id_instituicao,
-                nome: filters.nome
+                aberto_fechado: filters.aberto_fechado,
+                descricao: filters.descricao,
+                id_local: filters.id_local,
+                id_instituicao: filters.id_instituicao
             };
             this.logsController.create(filters.id_usuario as string, conteudoListagem, this.tiposLog.LISTLOG);
             
             return response.status(200).json(query);
         } catch (err) {
             return response.status(500).json({
-                error: 'Erro ao consultar instituições',
+                error: 'Erro ao consultar locais',
                 sqlMessage: err.sqlMessage,
                 sqlState: err.sqlState
             });
@@ -117,26 +127,25 @@ export default class instituicaoController {
         const stringFilters = request.query.filters as string;
         const filters = JSON.parse(stringFilters);
 
-        if(!filters || !filters.id_usuario || (!filters.cnpj && !filters.id_instituicao)) {
+        if(!filters || !filters.id_usuario || (!filters.id_local && !filters.id_instituicao)) {
             response.status(500).json({
                 error: 'Nenhum filtro de deleção foi informado'
             });
         }
 
         try {
-            var query = await db('instituicao').where(function() {
-                //podemos excluir uma lista de cnpjs e/ou uma lista de ids
+            var query = await db('local').where(function() {
                 if(filters && filters.cnpj)
-                    this.whereIn('cnpj', filters.cnpj);
+                    this.whereIn('id_local', filters.id_local);
                 if(filters && filters.id_instituicao)
                     this.whereIn('id_instituicao', filters.id_instituicao);
             }).del().then(function(){
                 response.status(200).json ({
-                    message: 'Instituições deletadas com sucesso'
+                    message: 'Locais deletados com sucesso'
                 });
             }); 
             var conteudoExclusao = {
-                cnpj: filters.cnpj,
+                id_local: filters.id_local,
                 id_instituicao: filters.id_instituicao,
             };
             this.logsController.create(filters.id_usuario as string, conteudoExclusao, this.tiposLog.EXCLUDELOG);
@@ -154,47 +163,59 @@ export default class instituicaoController {
     async edit(request: Request, response: Response) {
         const stringFilters = request.query.filters as string;
         const filters = JSON.parse(stringFilters);
-        const {
-            emblema,
-            cnpj,
-            nome,
-            metadata
+        var {
+            descricao,
+            lotacao_maxima,
+            aberto_fechado,
+            metadata,
+            id_instituicao,
+            id_usuario
         } = request.body;
 
-        if(!filters || (!filters.cnpj && !filters.id_instituicao)) {
+        if(!filters || !filters.id_usuario || (!filters.id_local && !filters.id_instituicao)) {
             response.status(500).json({
-                error: 'Nenhum filtro de edição foi informado'
+                error: 'Nenhum filtro de deleção foi informado'
             });
         }
 
+        var descricao_normalizada = descricao;
+        descricao_normalizada = descricao_normalizada.normalize("NFD").replace(/[\u0300-\u036f]/g, "")
+        descricao_normalizada = descricao_normalizada.replace(' ','_');
+        descricao_normalizada = descricao_normalizada.toLocaleUpperCase();
+
         var columns:any = {};
-        if (request.body.emblema)
-            columns.emblema = request.body.emblema; 
-        if (request.body.cnpj)
-            columns.cnpj = request.body.cnpj; 
-        if (request.body.nome)
-            columns.nome = request.body.nome; 
-        if (request.body.metadata)
-            columns.nome = request.body.metadata;     
+        columns.ultima_atualizacao = db.fn.now();
+        if (metadata)
+            columns.metadata = metadata; 
+        if (lotacao_maxima)
+            columns.lotacao_maxima = lotacao_maxima; 
+        if (aberto_fechado)
+            columns.aberto_fechado = aberto_fechado; 
+        if (id_instituicao)
+            columns.id_instituicao = id_instituicao;
+        if (descricao) {
+            columns.descricao = descricao;
+            columns.descricao_normalizada = descricao_normalizada;
+        }
 
         try {
-            var query = await db('instituicao')
+            var query = await db('local')
             .where(function() {
                 if(filters && filters.cnpj)
-                    this.whereIn('cnpj', filters.cnpj);
+                    this.whereIn('id_local', filters.id_local);
                 if(filters && filters.id_instituicao)
                     this.whereIn('id_instituicao', filters.id_instituicao);
             })
             .update(columns)
             .then(function(){
                 response.status(200).json ({
-                    message: 'Instituições editadas com sucesso'
+                    message: 'Locais editados com sucesso'
                 });
             }); 
             this.logsController.create(filters.id_usuario as string, columns, this.tiposLog.EDITLOG);
         } catch (err) {
             return response.status(500).json({
-                error: 'Erro ao editar instituições',
+                error: 'Erro ao editar locais',
                 sqlMessage: err.sqlMessage,
                 sqlState: err.sqlState
             });
