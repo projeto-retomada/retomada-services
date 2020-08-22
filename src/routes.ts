@@ -1,7 +1,7 @@
 import express, { response } from 'express';
 import UsuarioController from './controllers/UsuarioController';
 import InstituicaoController from './controllers/InstituicaoController';
-import LocalController from './controllers/LocalCOntroller';
+import LocalController from './controllers/LocalController';
 
 const routes = express.Router();
 const usuarioController = new UsuarioController();
