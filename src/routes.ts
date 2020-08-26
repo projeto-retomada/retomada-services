@@ -1,12 +1,14 @@
-import express, { response } from 'express';
+import express, { response, Router } from 'express';
 import UsuarioController from './controllers/UsuarioController';
 import InstituicaoController from './controllers/InstituicaoController';
 import LocalController from './controllers/LocalController';
+import CertificateController from './controllers/CertificateController';
 
 const routes = express.Router();
 const usuarioController = new UsuarioController();
 const instituicaoController = new InstituicaoController();
 const localCOontroller = new LocalController();
+const certificateController = new CertificateController();
 
 routes.get('/', (request, response) => {
     return response.send('200: OK');
@@ -28,5 +30,9 @@ routes.get('/list-locations', localCOontroller.index);
 routes.delete('/delete-locations', localCOontroller.delete);
 routes.put('/edit-locations', localCOontroller.edit);
 
+routes.get('/certificates', certificateController.getAll);
+routes.post('/certificates', certificateController.create);
+routes.delete('/certificates/:id', certificateController.delete);
+routes.put('/certificates/:id', certificateController.edit);
 
 export default routes;
