@@ -29,7 +29,7 @@ export default class CertificateController {
                 return response.status(201).json({ id: atestado });
             });
         } catch (err) {
-            return response.status(400).json({
+            return response.status(500).json({
                 error: 'Unexpected error creating Certificate',
                 sqlMessage: err.sqlMessage,
                 sqlState: err.sqlState
@@ -44,7 +44,7 @@ export default class CertificateController {
                 return response.status(200).json();
             });
         } catch (err) {
-            return response.status(400).json({
+            return response.status(500).json({
                 error: 'Unexpected error deleting Certificate',
                 sqlMessage: err.sqlMessage,
                 sqlState: err.sqlState
@@ -76,7 +76,7 @@ export default class CertificateController {
                     return response.status(200).json();
                 });
         } catch (err) {
-            return response.status(400).json({
+            return response.status(500).json({
                 error: 'Unexpected error updating Certificate',
                 sqlMessage: err.sqlMessage,
                 sqlState: err.sqlState
