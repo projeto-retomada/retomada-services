@@ -5,8 +5,21 @@ import db from '../database/connection';
 export default class CertificateController {
 
     async getAll(request: Request, response: Response) {
-        const atestados = await db('atestado').select('*');
-        return response.json(atestados);
+
+        var certificates: any;
+
+        try {
+            certificates = await db('atestado')
+                .join('usuario', 'atestado.usuario_id', '=', 'usuario.id_usuario');
+        }catch(err) {
+            return response.status(500).json({
+                error: 'Unexpected error getting user',
+                sqlMessage: err.sqlMessage,
+                sqlState: err.sqlState
+            });
+        }
+
+        return response.json(certificates);
     }
 
     async create(request: Request, response: Response) {
@@ -25,8 +38,11 @@ export default class CertificateController {
                 doenca_respiratoria,
                 file,
                 usuario_id,
-            }).then((atestado) => {
-                return response.status(201).json({ id: atestado });
+            }).then(async (certificate) => {
+                await db('atestado').where('id_atestado', certificate[0])
+                    .then(recoveredCertificate =>{
+                    return response.status(201).json(recoveredCertificate);
+                });
             });
         } catch (err) {
             return response.status(500).json({
@@ -41,7 +57,9 @@ export default class CertificateController {
         const { id } = request.params;
         try {
             await db('atestado').where('id_atestado', id).del().then(() => {
-                return response.status(200).json();
+                return response.status(200).json({
+                    message: 'Certificate deleted successfully'
+                });
             });
         } catch (err) {
             return response.status(500).json({
@@ -72,8 +90,12 @@ export default class CertificateController {
                     doenca_respiratoria,
                     file,
                     usuario_id
-                }).then(() => {
-                    return response.status(200).json();
+                }).then(async() => {
+                    await db('atestado')
+                    .where('id_atestado', id)
+                    .then((recovedCertificate) => {
+                        return response.status(200).json(recovedCertificate);
+                    });
                 });
         } catch (err) {
             return response.status(500).json({

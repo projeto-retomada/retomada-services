@@ -7,30 +7,30 @@ export default class UserController {
     async getAll(request: Request, response: Response) {
 
         const { id } = request.params;
-        var usuarios;
+        var users: any;
 
         if (id) {
             try {
-                usuarios = await db('usuario').select('*').where('id_usuario', id);
+                users = await db('usuario').select('*').where('id_usuario', id);
             } catch (err) {
                 return response.status(500).json({
-                    error: 'Unexpected error creating user',
+                    error: 'Unexpected error getting user',
                     sqlMessage: err.sqlMessage,
                     sqlState: err.sqlState
                 });
             }
         } else {
             try {
-                usuarios = await db('usuario').select('*');
+                users = await db('usuario').select('*');
             }catch(err) {
                 return response.status(500).json({
-                    error: 'Unexpected error creating user',
+                    error: 'Unexpected error getting user',
                     sqlMessage: err.sqlMessage,
                     sqlState: err.sqlState
                 }); 
             }
         }
-        return response.json(usuarios);
+        return response.json(users);
     }
 
     async create(request: Request, response: Response) {
@@ -53,8 +53,11 @@ export default class UserController {
                 metadata,
                 tipo_usuario,
                 id_instituicao
-            }).then((usuario) => {
-                return response.status(201).json({ id: usuario });
+            }).then(async (user) => {
+                await db('usuario').where('id_usuario', user[0])
+                    .then(recoveredUser =>{
+                    return response.status(201).json(recoveredUser);
+                });
             });
         } catch (err) {
             return response.status(500).json({
@@ -66,10 +69,14 @@ export default class UserController {
     }
 
     async delete(request: Request, response: Response) {
+
         const { id } = request.params;
+
         try {
             await db('usuario').where('id_usuario', id).del().then(() => {
-                return response.status(200).json();
+                return response.status(200).json({
+                    message: 'User deleted successfully'
+                });
             });
         } catch (err) {
             return response.status(400).json({
@@ -105,8 +112,12 @@ export default class UserController {
                     metadata,
                     tipo_usuario,
                     id_instituicao
-                }).then(() => {
-                    return response.status(200).json();
+                }).then(async(usuario) => {
+                    await db('usuario')
+                        .where('id_usuario', id)
+                        .then((recovedUser) => {
+                            return response.status(200).json(recovedUser);
+                        });
                 });
         } catch (err) {
             return response.status(400).json({

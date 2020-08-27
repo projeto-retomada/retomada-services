@@ -6,33 +6,19 @@ export default class HealthActivitiesController {
 
     async getAll(request: Request, response: Response) {
 
-        const { id } = request.params;
         var activities;
 
-        if(id) {
-            try {
-                activities = await db('health_activities')
-                .select('*')
-                .where('usuario_id', id);
-            }catch(err) {
-                return response.status(500).json({
-                    error: 'Unexpected error',
-                    sqlMessage: err.sqlMessage,
-                    sqlState: err.sqlState
-                });
-            }
-        } else {
-            try {
-                activities = await db('health_activities')
-                .select('*')
-            }catch(err) {
-                return response.status(500).json({
-                    error: 'Unexpected error',
-                    sqlMessage: err.sqlMessage,
-                    sqlState: err.sqlState
-                });
-            }
+        try {
+            activities = await db('health_activities')
+                .select('*');
+        }catch(err) {
+            return response.status(500).json({
+                error: 'Unexpected error',
+                sqlMessage: err.sqlMessage,
+                sqlState: err.sqlState
+            });
         }
+
         return response.json(activities);
     }
 
@@ -91,8 +77,12 @@ export default class HealthActivitiesController {
                 febre,
                 contato_com_exposto,
                 usuario_id
-            }).then((atestado) => {
-                return response.status(201).json({ id: atestado });
+            }).then(async(healthActivity) => {
+                await db('health_activities')
+                    .where('id_health_activities', healthActivity[0])
+                    .then((recoverdActivity) => {
+                        return response.status(201).json(recoverdActivity);
+                    });
             });
         } catch (err) {
             return response.status(500).json({
@@ -107,7 +97,9 @@ export default class HealthActivitiesController {
         const { id } = request.params;
         try {
             await db('health_activities').where('id_health_activities', id).del().then(() => {
-                return response.status(200).json();
+                return response.status(200).json({
+                    message: 'Health Activity deleted successfully'
+                });
             });
         } catch (err) {
             return response.status(500).json({
@@ -146,8 +138,12 @@ export default class HealthActivitiesController {
                     febre,
                     contato_com_exposto,
                     usuario_id
-                }).then(() => {
-                    return response.status(200).json();
+                }).then(async() => {
+                    await db('health_activities')
+                        .where('id_health_activities', id)
+                        .then((recoveredActivity) => {
+                            return response.status(200).json(recoveredActivity);
+                        });
                 });
         } catch (err) {
             return response.status(500).json({

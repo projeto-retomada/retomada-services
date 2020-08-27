@@ -17,11 +17,11 @@ routes.get('/', (request, response) => {
 });
 
 //Rotas da entidade Usuário
-routes.get('/usuarios', userController.getAll);
-routes.get('/usuarios/:id', userController.getAll);
-routes.post('/usuarios', userController.create);
-routes.delete('/usuarios/:id', userController.delete);
-routes.put('/usuarios/:id', userController.edit);
+routes.get('/users', userController.getAll);
+routes.get('/users/:id', userController.getAll);
+routes.post('/users', userController.create);
+routes.delete('/users/:id', userController.delete);
+routes.put('/users/:id', userController.edit);
 
 routes.post('/create-institutions', instituicaoController.create);
 routes.get('/list-institutions', instituicaoController.index);
