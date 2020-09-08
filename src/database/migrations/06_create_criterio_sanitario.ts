@@ -1,15 +1,14 @@
 import Knex from 'knex';
 
 export async function up(knex: Knex) {
-    return knex.schema.createTable('local', table => {
-        table.increments('id_local').primary();
+    return knex.schema.createTable('criterio_sanitario', table => {
+        table.increments('id_criterio_sanitario').primary();
         table.dateTime('criacao').notNullable();
         table.dateTime('ultima_atualizacao').notNullable();
+        table.integer('lotacao_maxima').notNullable();
         table.string('descricao').notNullable();
-        table.string('descricao_normalizada').notNullable();
-        table.integer('lotacao_maxima');
-        table.string('aberto_fechado').notNullable();
-        table.text('metadata').notNullable();
+        table.string('uso_mascara').notNullable();
+        table.integer('distanciamento_minimo').notNullable();
         table.integer('id_instituicao')
             .references('id_instituicao')
             .inTable('instituicao')
@@ -21,5 +20,5 @@ export async function up(knex: Knex) {
 }
 
 export async function down(knex: Knex) {
-    return knex.schema.dropTable('local');
+    return knex.schema.dropTable('criterio_sanitario');
 }

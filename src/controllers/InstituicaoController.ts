@@ -1,18 +1,8 @@
 import { Response, Request} from  'express';
 
 import db from '../database/connection';
-import LogsController from './LogsController';
 
 export default class instituicaoController {
-
-    logsController = new LogsController();
-    tiposLog = {
-        EDITLOG: 'EDITAR-INSTITUICAO',
-        CREATELOG: 'CRIAR-INSTITUICAO',
-        EXCLUDELOG: 'EXCLUIR-INSTITUICAO',
-        LISTLOG: 'LISTAR-INSTITUICAO'
-    }
-
     async create(request: Request, response: Response) {
 
         var nome_normalizado = request.body.nome;
@@ -33,6 +23,11 @@ export default class instituicaoController {
             });
 
         try {
+            db('metrica_log').insert(
+                {emblema,
+                cnpj,
+                nome,
+                metadata});
             await db('instituicao').insert({
                 emblema,
                 cnpj,
@@ -44,16 +39,6 @@ export default class instituicaoController {
                     message: 'Instituição cadastrada com sucesso'
                 });
           });
-
-          //gerando log de criação de instituição 
-          var conteudoEdicao = {
-            emblema,
-            cnpj,
-            nome,
-            metadata
-          };
-          this.logsController.create(request.body.id_usuario as string, conteudoEdicao, this.tiposLog.CREATELOG);
-
         } catch(err) {
             return response.status(500).json({
                 error: 'Erro ao inserir nova instituição',
@@ -93,14 +78,6 @@ export default class instituicaoController {
                     this.where('nome_normalizado', 'LIKE', '%' + filters.nome + '%');
             }); 
             
-            //gerando log de criação de instituição 
-            var conteudoListagem = {
-                cnpj: filters.cnpj,
-                id_instituicao: filters.id_instituicao,
-                nome: filters.nome
-            };
-            this.logsController.create(filters.id_usuario as string, conteudoListagem, this.tiposLog.LISTLOG);
-            
             return response.status(200).json(query);
         } catch (err) {
             return response.status(500).json({
@@ -135,11 +112,6 @@ export default class instituicaoController {
                     message: 'Instituições deletadas com sucesso'
                 });
             }); 
-            var conteudoExclusao = {
-                cnpj: filters.cnpj,
-                id_instituicao: filters.id_instituicao,
-            };
-            this.logsController.create(filters.id_usuario as string, conteudoExclusao, this.tiposLog.EXCLUDELOG);
         } catch (err) {
             return response.status(500).json({
                 error: 'Erro ao deletar instituições',
@@ -191,7 +163,6 @@ export default class instituicaoController {
                     message: 'Instituições editadas com sucesso'
                 });
             }); 
-            this.logsController.create(filters.id_usuario as string, columns, this.tiposLog.EDITLOG);
         } catch (err) {
             return response.status(500).json({
                 error: 'Erro ao editar instituições',
