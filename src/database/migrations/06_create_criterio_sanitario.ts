@@ -6,6 +6,7 @@ export async function up(knex: Knex) {
         table.dateTime('criacao').notNullable();
         table.dateTime('ultima_atualizacao').notNullable();
         table.integer('lotacao_maxima').notNullable();
+        table.string('descricao').notNullable();
         table.string('uso_mascara').notNullable();
         table.integer('distanciamento_minimo').notNullable();
         table.integer('id_instituicao')

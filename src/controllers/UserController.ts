@@ -2,12 +2,35 @@ import { Response, Request } from 'express';
 
 import db from '../database/connection';
 
-export default class UsuarioController {
+export default class UserController {
 
     async getAll(request: Request, response: Response) {
-        const filters = request.query;
-        const usuarios = await db('usuario').select('*');
-        return response.json(usuarios);
+
+        const { id } = request.params;
+        var users: any;
+
+        if (id) {
+            try {
+                users = await db('usuario').select('*').where('id_usuario', id);
+            } catch (err) {
+                return response.status(500).json({
+                    error: 'Unexpected error getting user',
+                    sqlMessage: err.sqlMessage,
+                    sqlState: err.sqlState
+                });
+            }
+        } else {
+            try {
+                users = await db('usuario').select('*');
+            }catch(err) {
+                return response.status(500).json({
+                    error: 'Unexpected error getting user',
+                    sqlMessage: err.sqlMessage,
+                    sqlState: err.sqlState
+                }); 
+            }
+        }
+        return response.json(users);
     }
 
     async create(request: Request, response: Response) {
@@ -30,12 +53,15 @@ export default class UsuarioController {
                 metadata,
                 tipo_usuario,
                 id_instituicao
-            }).then((usuario) => {
-                return response.status(201).json({id: usuario});
+            }).then(async (user) => {
+                await db('usuario').where('id_usuario', user[0])
+                    .then(recoveredUser =>{
+                    return response.status(201).json(recoveredUser);
+                });
             });
         } catch (err) {
-            return response.status(400).json({
-                error: 'Erro inesperado na criação do usuário',
+            return response.status(500).json({
+                error: 'Unexpected error creating user',
                 sqlMessage: err.sqlMessage,
                 sqlState: err.sqlState
             });
@@ -43,14 +69,18 @@ export default class UsuarioController {
     }
 
     async delete(request: Request, response: Response) {
+
         const { id } = request.params;
+
         try {
-            await db('usuario').where('id_usuario', id).del().then(() =>{
-                return response.status(200).json();
+            await db('usuario').where('id_usuario', id).del().then(() => {
+                return response.status(200).json({
+                    message: 'User deleted successfully'
+                });
             });
         } catch (err) {
             return response.status(400).json({
-                error: 'Erro inesperado na criação do usuário',
+                error: 'Unexpected error deleting user',
                 sqlMessage: err.sqlMessage,
                 sqlState: err.sqlState
             });
@@ -58,6 +88,7 @@ export default class UsuarioController {
     }
 
     async edit(request: Request, response: Response) {
+
         const { id } = request.params;
 
         const {
@@ -81,12 +112,16 @@ export default class UsuarioController {
                     metadata,
                     tipo_usuario,
                     id_instituicao
-            }).then(() => {
-                return response.status(200).json();
-            });
+                }).then(async(usuario) => {
+                    await db('usuario')
+                        .where('id_usuario', id)
+                        .then((recovedUser) => {
+                            return response.status(200).json(recovedUser);
+                        });
+                });
         } catch (err) {
             return response.status(400).json({
-                error: 'Erro inesperado na criação do usuário',
+                error: 'Unexpected error updating user',
                 sqlMessage: err.sqlMessage,
                 sqlState: err.sqlState
             });
