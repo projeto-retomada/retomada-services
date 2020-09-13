@@ -1,17 +1,8 @@
 import { Response, Request} from  'express';
 
 import db from '../database/connection';
-import LogsController from './LogsController';
 
 export default class criterioSanitarioController {
-
-    logsController = new LogsController();
-    tiposLog = {
-        EDITLOG: 'EDITAR-CRITERIO-SANITARIO',
-        CREATELOG: 'CRIAR-CRITERIO-SANITARIO',
-        EXCLUDELOG: 'EXCLUIR-CRITERIO-SANITARIO',
-        LISTLOG: 'LISTAR-CRITERIO-SANITARIO'
-    }
 
     async create(request: Request, response: Response) {
 
@@ -41,15 +32,6 @@ export default class criterioSanitarioController {
                     message: 'Criterio cadastrado com sucesso'
                 });
           });
-
-          //gerando log de criação de instituição 
-          var conteudoEdicao = {
-            lotacao_maxima, 
-            uso_mascara,
-            distanciamento_minimo,
-            id_instituicao
-          };
-          this.logsController.create(id_usuario as string, conteudoEdicao, this.tiposLog.CREATELOG);
 
         } catch(err) {
             return response.status(500).json({
@@ -81,15 +63,6 @@ export default class criterioSanitarioController {
                 if(filters.distanciamento_minimo)
                     this.where('distanciamento_minimo', filters.distanciamento_minimo);
             }); 
-            
-            //gerando log de criação de instituição 
-            var conteudoListagem = {
-                id_instituicao: filters.id_instituicao,
-                uso_mascara: filters.uso_mascara,
-                distanciamento_minimo: filters.distanciamento_minimo
-            };
-            this.logsController.create(filters.id_usuario as string, conteudoListagem, this.tiposLog.LISTLOG);
-            
             return response.status(200).json(query);
         } catch (err) {
             return response.status(500).json({
@@ -123,11 +96,6 @@ export default class criterioSanitarioController {
                     message: 'Critérios sanitários deletados com sucesso'
                 });
             }); 
-            var conteudoExclusao = {
-                id_criterio_sanitario: filters.id_criterio_sanitario,
-                id_instituicao: filters.id_instituicao,
-            };
-            this.logsController.create(filters.id_usuario as string, conteudoExclusao, this.tiposLog.EXCLUDELOG);
         } catch (err) {
             return response.status(500).json({
                 error: 'Erro ao deletar critérios sanitários',
@@ -181,7 +149,6 @@ export default class criterioSanitarioController {
                     message: 'Critérios sanitários editados com sucesso'
                 });
             }); 
-            this.logsController.create(filters.id_usuario as string, columns, this.tiposLog.EDITLOG);
         } catch (err) {
             return response.status(500).json({
                 error: 'Erro ao editar critérios sanitários',
