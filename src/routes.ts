@@ -5,6 +5,7 @@ import CertificateController from './controllers/CertificateController';
 import HealthActivitiesController from './controllers/HealthActivitiesController';
 import UserController from './controllers/UserController';
 import ActivityNoteController from './controllers/ActivityNoteController';
+import ActivityController from './controllers/ActivityController';
 
 const routes = express.Router();
 
@@ -14,6 +15,7 @@ const localCOontroller = new LocalController();
 const certificateController = new CertificateController();
 const healthActivitiesController = new HealthActivitiesController();
 const activityNoteController = new ActivityNoteController();
+const activityController = new ActivityController();
 
 routes.get('/', (request, response) => {
     return response.send('200: OK');
@@ -51,5 +53,10 @@ routes.put('/health-activities/:id', healthActivitiesController.edit);
 routes.get('/activity-note', activityNoteController.getAll);
 routes.post('/activity-note', activityNoteController.create);
 routes.delete('/activity-note/:id', activityNoteController.delete);
+
+routes.post('/activity', activityController.create);
+routes.get('/activity', activityController.index);
+routes.delete('/activity', activityController.delete);
+routes.put('/activity', activityController.edit);
 
 export default routes;
