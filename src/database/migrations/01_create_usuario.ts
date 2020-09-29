@@ -9,6 +9,8 @@ export async function up(knex: Knex) {
         table.specificType('imune', 'char(1)').notNullable();
         table.text('metadata').notNullable();
         table.string('tipo_usuario').notNullable();
+        table.text('email').notNullable();
+        table.text('senha').notNullable();
         table.integer('id_instituicao')
             .references('id_instituicao')
             .inTable('instituicao')

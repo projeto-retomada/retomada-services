@@ -6,7 +6,7 @@ export const configuration: Config = {
     connection: {
         host:'localhost',
         user: 'root',
-        password: 'masterkey4191',
+        password: '',
         database: 'retomada'
     },
     pool: { min: 0, max: 7 },

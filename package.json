@@ -18,8 +18,11 @@
     },
     "dependencies": {
         "cors": "^2.8.5",
+        "crypto-js": "^4.0.0",
+        "crypto-ts": "^1.0.2",
         "express": "^4.17.1",
         "knex": "^0.21.4",
+        "knex-migrate": "^1.7.4",
         "mysql": "^2.18.1"
     }
 }
