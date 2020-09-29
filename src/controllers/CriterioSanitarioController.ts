@@ -11,10 +11,9 @@ export default class criterioSanitarioController {
             uso_mascara,
             distanciamento_minimo,
             id_instituicao,
-            id_usuario
         } = request.body;
 
-        if (!lotacao_maxima || !uso_mascara || !id_instituicao || !id_usuario) 
+        if (!lotacao_maxima || !uso_mascara || !id_instituicao) 
             return response.status(500).json({
                 error: 'Parâmetros requeridos não foram informados'
             });
@@ -47,13 +46,7 @@ export default class criterioSanitarioController {
     async index(request: Request, response: Response) {
         const stringFilters = request.query.filters as string;
         const filters = JSON.parse(stringFilters);
-
-        if (!filters.id_usuario) {
-            return response.status(500).json({
-                error: 'O nome do usuário que realizou a ação não foi informado'
-            });
-        }
-
+        
         try {
             var query = await db('criterio_sanitario').select('*').where(function() {
                 if(filters.id_instituicao)
