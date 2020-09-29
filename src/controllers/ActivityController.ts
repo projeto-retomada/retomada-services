@@ -56,10 +56,12 @@ export default class activityController {
 
         try {
             var query = await db('atividade').select('*').where(function() {
+                if(filters.id_atividade)
+                    this.whereIn('id_atividade', filters.id_atividade);
                 if(filters.id_local)
-                    this.where('id_local', filters.id_local);
+                    this.whereIn('id_local', filters.id_local);
                 if(filters.id_criterio_sanitario)
-                    this.where('id_local', filters.id_criterio_sanitario);
+                    this.whereIn('id_criterio_sanitario', filters.id_criterio_sanitario);
                 if(filters.data_inicio)
                     this.where('data_inicio', '>=', filters.data_inicio);
                 if(filters.data_encerramento)
