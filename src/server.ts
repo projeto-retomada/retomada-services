@@ -1,9 +1,14 @@
 import express from 'express';
+import routes from './routes';
+import cors from 'cors';
 
-const appRetomada = express();
+var corsOptions = {
+    origin: '*',
+    optionsSuccessStatus: 200
+ }
 
-appRetomada.get('/', (request, response) => {
-    return response.send('200: Ok')
-});
-
-appRetomada.listen(3333);        
+const app = express();
+app.use(express.json());
+app.use(cors(corsOptions));
+app.use(routes);
+app.listen(3333);        
