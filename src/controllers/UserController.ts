@@ -1,5 +1,5 @@
 import { Response, Request } from 'express';
-import { AES, Utf8 } from 'crypto-ts';
+import { AES, enc } from 'crypto-ts';
 import db from '../database/connection';
 
 export default class UserController {
@@ -24,11 +24,11 @@ export default class UserController {
             .then(user => {
                 if (user[0]) {
                     var bytes  = AES.decrypt(senha.toString(), 'retomadaKey');
-                    var senhaParametros = bytes.toString(Utf8);
+                    var senhaParametros = bytes.toString(enc.Utf8);
 
                     var senhaBanco = user[0].senha;
                     bytes  = AES.decrypt(senhaBanco.toString(), 'retomadaKey');
-                    senhaBanco = bytes.toString(Utf8);
+                    senhaBanco = bytes.toString(enc.Utf8);
 
                     if (senhaBanco == senhaParametros) {
                         return response.status(200).json(user);
@@ -97,7 +97,7 @@ export default class UserController {
             id_instituicao
         } = request.body;
 
-        senha = SHA256(senha);
+        senha = AES.encrypt(senha, 'retomadaKey').toString();
 
         try {
             await db('usuario').insert({
