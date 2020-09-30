@@ -1,8 +1,40 @@
 import { Response, Request } from 'express';
-import { AES } from 'crypto-ts';
+import { SHA256 } from 'crypto-ts';
 import db from '../database/connection';
 
 export default class UserController {
+
+    async login(request: Request, response: Response) {
+        var {
+            email,
+            senha
+        } = request.body;
+
+        if (!email || !senha){
+            return response.status(500).json({
+                error: 'Parâmetros requeridos não informados'
+            }); 
+        }
+
+        senha = SHA256(senha);
+
+        try {
+            await db('usuario').select('*')
+            .where('email', email)
+            .andWhere('senha', senha).then(user => {
+                if(user[0].id_usuario) {
+                    return response.status(201).json(user[0]);
+                }
+            });
+        } catch (err) {
+            return response.status(500).json({
+                error: 'Unexpected error getting user',
+                sqlMessage: err.sqlMessage,
+                sqlState: err.sqlState
+            });
+        }
+
+    }
 
     async getAll(request: Request, response: Response) {
 
@@ -34,15 +66,19 @@ export default class UserController {
     }
 
     async create(request: Request, response: Response) {
-        const {
+        var {
             nome,
             cpf_cnpj,
             grupo_risco,
             imune,
             metadata,
             tipo_usuario,
+            email,
+            senha,
             id_instituicao
         } = request.body;
+
+        senha = SHA256(senha);
 
         try {
             await db('usuario').insert({
@@ -52,6 +88,8 @@ export default class UserController {
                 imune,
                 metadata,
                 tipo_usuario,
+                email,
+                senha,
                 id_instituicao
             }).then(async (user) => {
                 await db('usuario').where('id_usuario', user[0])

@@ -57,12 +57,6 @@ export
     async index(request: Request, response: Response) {
         const stringFilters = request.query.filters as string;
         const filters = JSON.parse(stringFilters);
-
-        if (!filters.id_usuario) {
-            return response.status(500).json({
-                error: 'O nome do usuário que realizou a ação não foi informado'
-            });
-        }
         
         if(filters.descricao) {
             filters.descricao = filters.descricao.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
