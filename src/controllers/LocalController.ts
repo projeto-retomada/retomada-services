@@ -18,7 +18,7 @@ export
         if (!metadata) 
             metadata = {};
 
-        if (!aberto_fechado || !descricao || !id_instituicao || !id_usuario) 
+        if (!aberto_fechado || !descricao || !id_instituicao) 
             return response.status(500).json({
                 error: 'Parâmetros requeridos não foram informados'
             });
@@ -91,7 +91,7 @@ export
         const stringFilters = request.query.filters as string;
         const filters = JSON.parse(stringFilters);
 
-        if(!filters || !filters.id_usuario || (!filters.id_local && !filters.id_instituicao)) {
+        if(!filters || (!filters.id_local && !filters.id_instituicao)) {
             response.status(500).json({
                 error: 'Nenhum filtro de deleção foi informado'
             });
@@ -131,7 +131,7 @@ export
             id_usuario
         } = request.body;
 
-        if(!filters || !filters.id_usuario || (!filters.id_local && !filters.id_instituicao)) {
+        if(!filters || (!filters.id_local && !filters.id_instituicao)) {
             response.status(500).json({
                 error: 'Nenhum filtro de deleção foi informado'
             });
