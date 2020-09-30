@@ -1,5 +1,5 @@
 import { Response, Request } from 'express';
-import { SHA256 } from 'crypto-ts';
+import { AES, Utf8 } from 'crypto-ts';
 import db from '../database/connection';
 
 export default class UserController {
@@ -16,14 +16,33 @@ export default class UserController {
             }); 
         }
 
-        senha = SHA256(senha);
+        senha = AES.encrypt(senha, 'retomadaKey');
 
         try {
             await db('usuario').select('*')
             .where('email', email)
-            .andWhere('senha', senha).then(user => {
-                if(user[0].id_usuario) {
-                    return response.status(201).json(user[0]);
+            .then(user => {
+                if (user[0]) {
+                    var bytes  = AES.decrypt(senha.toString(), 'retomadaKey');
+                    var senhaParametros = bytes.toString(Utf8);
+
+                    var senhaBanco = user[0].senha;
+                    bytes  = AES.decrypt(senhaBanco.toString(), 'retomadaKey');
+                    senhaBanco = bytes.toString(Utf8);
+
+                    if (senhaBanco == senhaParametros) {
+                        return response.status(200).json(user);
+                    }
+                    else {
+                        return response.status(500).json({
+                            error: 'Senha Inválida'
+                        }); 
+                    }
+                }
+                else {
+                    return response.status(500).json({
+                        error: 'Email inválido'
+                    }); 
                 }
             });
         } catch (err) {
