@@ -33,9 +33,11 @@ export default class activityController {
                 id_criterio_sanitario,
                 id_local,
                 metadata
-            }).then(() => { 
-                response.status(200).json ({
-                    message: 'Atividade cadastrada com sucesso'
+            }).then(async(atividade) => { 
+                await db('atividade')
+                .where('id_atividade', atividade[0])
+                .then((recoverdActivity) => {
+                    return response.status(201).json(recoverdActivity);
                 });
           });
 
@@ -45,71 +47,48 @@ export default class activityController {
                 sqlMessage: err.sqlMessage,
                 sqlState: err.sqlState
             });
-        } finally {
-            db.destroy();
         }
     }
 
     async index(request: Request, response: Response) {
-        const stringFilters = request.query.filters as string;
-        const filters = JSON.parse(stringFilters);
+
+        const { idLocal } = request.params;
+        var activities: any;
 
         try {
-            var query = await db('atividade').select('*').where(function() {
-                if(filters.id_atividade)
-                    this.whereIn('id_atividade', filters.id_atividade);
-                if(filters.id_local)
-                    this.whereIn('id_local', filters.id_local);
-                if(filters.id_criterio_sanitario)
-                    this.whereIn('id_criterio_sanitario', filters.id_criterio_sanitario);
-                if(filters.data_inicio)
-                    this.where('data_inicio', '>=', filters.data_inicio);
-                if(filters.data_encerramento)
-                    this.where('data_encerramento', '<=', filters.data_encerramento);
-            }); 
-            return response.status(200).json(query);
+            activities = await db('atividade').select('*').where('id_local', idLocal);
         } catch (err) {
             return response.status(500).json({
-                error: 'Erro ao consultar locais',
+                error: 'Unexpected error getting activity',
                 sqlMessage: err.sqlMessage,
                 sqlState: err.sqlState
             });
-        } finally {
-            db.destroy();
         }
+        return response.json(activities);
     }
 
     async delete(request: Request, response: Response) {
-        const stringFilters = request.query.filters as string;
-        const filters = JSON.parse(stringFilters);
 
-        if(!filters && !filters.id_atividade && !filters.id_local && !filters.id_criterio_sanitario) {
-            response.status(500).json({
-                error: 'Nenhum filtro de deleção foi informado'
+        const { idAtividade } = request.params;
+
+        if ( !idAtividade) {
+            return response.status(400).json({
+                error: 'Unexpected error deleting Activity. Verify the request',
             });
-        }
-
-        try {
-            var query = await db('atividade').where(function() {
-                if(filters && filters.id_atividade)
-                    this.whereIn('id_atividade', filters.id_atividade);
-                if(filters && filters.id_local)
-                    this.whereIn('id_local', filters.id_local);
-                if(filters && filters.id_criterio_sanitario)
-                    this.whereIn('id_criterio_sanitario', filters.id_criterio_sanitario);
-            }).del().then(function(){
-                response.status(200).json ({
-                    message: 'Atividades deletadas com sucesso'
+        } else {
+            try {
+                await db('atividade').where('id_atividade', idAtividade).del().then(() => {
+                    return response.status(200).json({
+                        message: 'Activity deleted successfully'
+                    });
                 });
-            }); 
-        } catch (err) {
-            return response.status(500).json({
-                error: 'Erro ao deletar atividades',
-                sqlMessage: err.sqlMessage,
-                sqlState: err.sqlState
-            });
-        } finally {
-            db.destroy();
+            } catch (err) {
+                return response.status(500).json({
+                    error: 'Unexpected error deleting Activity',
+                    sqlMessage: err.sqlMessage,
+                    sqlState: err.sqlState
+                });
+            }
         }
     }
 
@@ -169,8 +148,6 @@ export default class activityController {
                 sqlMessage: err.sqlMessage,
                 sqlState: err.sqlState
             });
-        } finally {
-            db.destroy();
         }
     }
 }

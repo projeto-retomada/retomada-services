@@ -4,4 +4,4 @@ O projeto Retomada foi criado com o intuito de auxíliar escolas que estão no m
 Este repositório contém a API REST deste projeto.
 
 
-Made with :heart: by Luis and Miriéle 
+Made with :heart: by Luis and Miriéle
