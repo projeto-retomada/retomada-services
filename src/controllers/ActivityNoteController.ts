@@ -6,10 +6,14 @@ export default class ActivityNoteController {
 
     async getAll(request: Request, response: Response) {
 
+        const {
+            idUsuario,
+        } = request.params;
+
         var activityNotes: any;
 
         try {
-            activityNotes = await db('apontamento_atividade')
+            activityNotes = await db('apontamento_atividade').select('*').where('id_usuario',idUsuario)
                 .join('usuario', 'apontamento_atividade.usuario_id', '=', 'usuario.id_usuario')
                 .join('atividade', 'apontamento_atividade.atividade_id', '=','atividade.id_atividade');
         }catch(err) {
@@ -24,10 +28,11 @@ export default class ActivityNoteController {
     }
 
     async create(request: Request, response: Response) {
-        const {
-            usuario_id,
-            atividade_id,
-        } = request.body;
+
+        const { atividade_id } = request.body;
+        const { idUsuario } = request.params;
+
+        const usuario_id = idUsuario;
 
         try {
             await db('apontamento_atividade').insert({
@@ -49,6 +54,7 @@ export default class ActivityNoteController {
     }
 
     async delete(request: Request, response: Response) {
+
         const { id } = request.params;
         try {
             await db('apontamento_atividade').where('id_apontamento_atividade', id).del().then(() => {
