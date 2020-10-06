@@ -52,13 +52,13 @@ routes.get('/health-activities/count/:id', healthActivitiesController.count);
 routes.delete('/health-activities/:id', healthActivitiesController.delete);
 routes.put('/health-activities/:id', healthActivitiesController.edit);
 
-routes.get('/activity-note', activityNoteController.getAll);
-routes.post('/activity-note', activityNoteController.create);
-routes.delete('/activity-note/:id', activityNoteController.delete);
+routes.get('/user/:idUsuario/activity-note', activityNoteController.getAll);
+routes.post('/user/:idUsuario/activity-note', activityNoteController.create);
+routes.delete('/user/:idUsuario/activity-note/:id', activityNoteController.delete);
 
 routes.post('/activity', activityController.create);
-routes.get('/activity', activityController.index);
-routes.delete('/activity', activityController.delete);
-routes.put('/activity', activityController.edit);
+routes.get('/:idLocal/activity', activityController.index);
+routes.delete('/:idLocal/activity/:idAtividade', activityController.delete);
+routes.put('/:idLocal/activity/:idAtividade', activityController.edit);
 
 export default routes;
