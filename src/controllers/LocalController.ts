@@ -12,7 +12,6 @@ export
             aberto_fechado,
             metadata,
             id_instituicao,
-            id_usuario
         } = request.body;
 
         if (!metadata) 
@@ -49,9 +48,7 @@ export
                 sqlMessage: err.sqlMessage,
                 sqlState: err.sqlState
             });
-        } finally {
-            db.destroy();
-        }
+        } 
     }
 
     async index(request: Request, response: Response) {
@@ -82,9 +79,7 @@ export
                 sqlMessage: err.sqlMessage,
                 sqlState: err.sqlState
             });
-        } finally {
-            db.destroy();
-        }
+        } 
     }
 
     async delete(request: Request, response: Response) {
@@ -114,9 +109,7 @@ export
                 sqlMessage: err.sqlMessage,
                 sqlState: err.sqlState
             });
-        } finally {
-            db.destroy();
-        }
+        } 
     }
 
     async edit(request: Request, response: Response) {
@@ -128,7 +121,6 @@ export
             aberto_fechado,
             metadata,
             id_instituicao,
-            id_usuario
         } = request.body;
 
         if(!filters || (!filters.id_local && !filters.id_instituicao)) {
@@ -177,8 +169,6 @@ export
                 sqlMessage: err.sqlMessage,
                 sqlState: err.sqlState
             });
-        } finally {
-            db.destroy();
-        }
+        } 
     }
 }

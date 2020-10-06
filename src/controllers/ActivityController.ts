@@ -45,37 +45,42 @@ export default class activityController {
                 sqlMessage: err.sqlMessage,
                 sqlState: err.sqlState
             });
-        } finally {
-            db.destroy();
         }
     }
 
     async index(request: Request, response: Response) {
         const stringFilters = request.query.filters as string;
-        const filters = JSON.parse(stringFilters);
+
+        var filters: any;
+        if (stringFilters) {
+            filters = JSON.parse(stringFilters);
+        }
 
         try {
-            var query = await db('atividade').select('*').where(function() {
-                if(filters.id_atividade)
-                    this.whereIn('id_atividade', filters.id_atividade);
-                if(filters.id_local)
-                    this.whereIn('id_local', filters.id_local);
-                if(filters.id_criterio_sanitario)
-                    this.whereIn('id_criterio_sanitario', filters.id_criterio_sanitario);
-                if(filters.data_inicio)
-                    this.where('data_inicio', '>=', filters.data_inicio);
-                if(filters.data_encerramento)
-                    this.where('data_encerramento', '<=', filters.data_encerramento);
-            }); 
+            if (filters) {
+                var query = await db('atividade').select('*').where(function() {
+                    if(filters.id_atividade)
+                        this.whereIn('id_atividade', filters.id_atividade);
+                    if(filters.id_local)
+                        this.whereIn('id_local', filters.id_local);
+                    if(filters.id_criterio_sanitario)
+                        this.whereIn('id_criterio_sanitario', filters.id_criterio_sanitario);
+                    if(filters.data_inicio)
+                        this.where('data_inicio', '>=', filters.data_inicio);
+                    if(filters.data_encerramento)
+                        this.where('data_encerramento', '<=', filters.data_encerramento);
+                });
+            } 
+            else {
+                var query = await db('atividade').select('*');
+            }
             return response.status(200).json(query);
         } catch (err) {
             return response.status(500).json({
-                error: 'Erro ao consultar locais',
+                error: err,
                 sqlMessage: err.sqlMessage,
                 sqlState: err.sqlState
             });
-        } finally {
-            db.destroy();
         }
     }
 
@@ -108,8 +113,6 @@ export default class activityController {
                 sqlMessage: err.sqlMessage,
                 sqlState: err.sqlState
             });
-        } finally {
-            db.destroy();
         }
     }
 
@@ -169,8 +172,6 @@ export default class activityController {
                 sqlMessage: err.sqlMessage,
                 sqlState: err.sqlState
             });
-        } finally {
-            db.destroy();
         }
     }
 }
