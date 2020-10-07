@@ -44,7 +44,7 @@ routes.post('/certificates', certificateController.create);
 routes.delete('/certificates/:id', certificateController.delete);
 routes.put('/certificates/:id', certificateController.edit);
 
-routes.get('/health-activities', healthActivitiesController.getAll);
+routes.get('/user/:idUsuario/health-activities', healthActivitiesController.getAll);
 routes.get('/health-activities/:id', healthActivitiesController.getAll);
 routes.post('/health-activities', healthActivitiesController.create);
 routes.get('/health-activities/count', healthActivitiesController.count);

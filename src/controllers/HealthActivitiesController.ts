@@ -6,11 +6,15 @@ export default class HealthActivitiesController {
 
     async getAll(request: Request, response: Response) {
 
+        const {
+            idUsuario,
+        } = request.params
+
         var activities;
 
         try {
             activities = await db('health_activities')
-                .select('*');
+                .select('*').where('usuario_id',idUsuario);
         }catch(err) {
             return response.status(500).json({
                 error: 'Unexpected error',

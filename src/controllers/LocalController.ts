@@ -49,8 +49,6 @@ export
                 sqlMessage: err.sqlMessage,
                 sqlState: err.sqlState
             });
-        } finally {
-            db.destroy();
         }
     }
 
@@ -82,8 +80,6 @@ export
                 sqlMessage: err.sqlMessage,
                 sqlState: err.sqlState
             });
-        } finally {
-            db.destroy();
         }
     }
 
@@ -114,8 +110,6 @@ export
                 sqlMessage: err.sqlMessage,
                 sqlState: err.sqlState
             });
-        } finally {
-            db.destroy();
         }
     }
 
@@ -177,8 +171,6 @@ export
                 sqlMessage: err.sqlMessage,
                 sqlState: err.sqlState
             });
-        } finally {
-            db.destroy();
         }
     }
 }
