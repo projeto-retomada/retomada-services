@@ -15,7 +15,8 @@ export default class ActivityNoteController {
         try {
             activityNotes = await db('apontamento_atividade').select('*').where('id_usuario',idUsuario)
                 .join('usuario', 'apontamento_atividade.usuario_id', '=', 'usuario.id_usuario')
-                .join('atividade', 'apontamento_atividade.atividade_id', '=','atividade.id_atividade');
+                .join({at: 'atividade'}, 'apontamento_atividade.atividade_id', '=','at.id_atividade')
+               
         }catch(err) {
             return response.status(500).json({
                 error: 'Unexpected error getting user',

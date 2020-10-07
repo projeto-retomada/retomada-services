@@ -51,6 +51,37 @@ export default class activityController {
     }
 
     async index(request: Request, response: Response) {
+<<<<<<< HEAD
+        const stringFilters = request.query.filters as string;
+
+        var filters: any;
+        if (stringFilters) {
+            filters = JSON.parse(stringFilters);
+        }
+
+        try {
+            if (filters) {
+                var query = await db('atividade').select('*').where(function() {
+                    if(filters.id_atividade)
+                        this.whereIn('id_atividade', filters.id_atividade);
+                    if(filters.id_local)
+                        this.whereIn('id_local', filters.id_local);
+                    if(filters.id_criterio_sanitario)
+                        this.whereIn('id_criterio_sanitario', filters.id_criterio_sanitario);
+                    if(filters.data_inicio)
+                        this.where('data_inicio', '>=', filters.data_inicio);
+                    if(filters.data_encerramento)
+                        this.where('data_encerramento', '<=', filters.data_encerramento);
+                });
+            } 
+            else {
+                var query = await db('atividade').select('*');
+            }
+            return response.status(200).json(query);
+        } catch (err) {
+            return response.status(500).json({
+                error: err,
+=======
 
         const { idLocal } = request.params;
         var activities: any;
@@ -60,6 +91,7 @@ export default class activityController {
         } catch (err) {
             return response.status(500).json({
                 error: 'Unexpected error getting activity',
+>>>>>>> origin/devluis
                 sqlMessage: err.sqlMessage,
                 sqlState: err.sqlState
             });
@@ -75,6 +107,8 @@ export default class activityController {
             return response.status(400).json({
                 error: 'Unexpected error deleting Activity. Verify the request',
             });
+<<<<<<< HEAD
+=======
         } else {
             try {
                 await db('atividade').where('id_atividade', idAtividade).del().then(() => {
@@ -89,6 +123,7 @@ export default class activityController {
                     sqlState: err.sqlState
                 });
             }
+>>>>>>> origin/devluis
         }
     }
 

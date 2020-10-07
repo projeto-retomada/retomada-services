@@ -51,31 +51,26 @@ export default class instituicaoController {
     }
 
     async index(request: Request, response: Response) {
-        const stringFilters = request.query.filters as string;
-        const filters = JSON.parse(stringFilters);
+        const { filters } = request.params;
+        console.log(typeof(filters));
+        var filtersJson = JSON.parse(filters);
+    
+        if(filtersJson.nome) {
+            filtersJson.nome = filtersJson.nome.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+            filtersJson.nome = filtersJson.nome.replace(' ','_');
+            filtersJson.nome = filtersJson.nome.toLocaleUpperCase();
 
-        if (!filters.id_usuario) {
-            return response.status(500).json({
-                error: 'O nome do usuário qu realizou a ação não foi informado'
-            });
-        }
-        
-        if(filters.nome) {
-            filters.nome = filters.nome.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
-            filters.nome = filters.nome.replace(' ','_');
-            filters.nome = filters.nome.toLocaleUpperCase();
-
-            console.log(filters.nome);
+            console.log(filtersJson.nome);
         }
 
         try {
             var query = await db('instituicao').select('*').where(function() {
-                if(filters.cnpj)
-                    this.where('cnpj', filters.cnpj);
-                if(filters.id_instituicao)
-                    this.where('id_instituicao', filters.id_instituicao);
-                if(filters.nome)
-                    this.where('nome_normalizado', 'LIKE', '%' + filters.nome + '%');
+                if(filtersJson.cnpj)
+                    this.where('cnpj', filtersJson.cnpj);
+                if(filtersJson.id_instituicao)
+                    this.where('id_instituicao', filtersJson.id_instituicao);
+                if(filtersJson.nome)
+                    this.where('nome_normalizado', 'LIKE', '%' + filtersJson.nome + '%');
             }); 
             
             return response.status(200).json(query);
@@ -94,7 +89,7 @@ export default class instituicaoController {
         const stringFilters = request.query.filters as string;
         const filters = JSON.parse(stringFilters);
 
-        if(!filters || !filters.id_usuario || (!filters.cnpj && !filters.id_instituicao)) {
+        if(!filters || (!filters.cnpj && !filters.id_instituicao)) {
             response.status(500).json({
                 error: 'Nenhum filtro de deleção foi informado'
             });
