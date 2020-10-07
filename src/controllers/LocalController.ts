@@ -12,7 +12,6 @@ export
             aberto_fechado,
             metadata,
             id_instituicao,
-            id_usuario
         } = request.body;
 
         if (!metadata) 
@@ -122,7 +121,6 @@ export
             aberto_fechado,
             metadata,
             id_instituicao,
-            id_usuario
         } = request.body;
 
         if(!filters || (!filters.id_local && !filters.id_instituicao)) {
