@@ -4,4 +4,25 @@ O projeto Retomada foi criado com o intuito de auxíliar escolas que estão no m
 Este repositório contém a API REST deste projeto.
 
 
+## :rocket: Ferramentas
+As tecnologias listadas abaixo foram utilizadas no projeto.
+- [Node.js](https://nodejs.org/en/)
+- [Typescript](https://www.typescriptlang.org)
+- [Express](https://expressjs.com/pt-br/)
+- [MySQL](https://www.mysql.com)
+
+## :information_source: Instruções para clone
+### Configuração da API
+```git
+$ git clone https://github.com/projeto-retomada/retomada-services.git
+
+$ npm install
+
+$ npm knex:migrate
+
+$ npm knex:seed
+
+$ npm start
+```
+
 Made with :heart: by Luis and Miriéle
