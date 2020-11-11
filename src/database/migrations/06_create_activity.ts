@@ -3,12 +3,12 @@ import Knex from 'knex';
 export async function up(knex: Knex) {
     return knex.schema.createTable('activity', table => {
         table.increments('id_activity').primary();
-        table.dateTime('start_date').notNullable();
-        table.dateTime('end_date').notNullable();
+        table.timestamp('start_date').notNullable();
+        table.timestamp('end_date').notNullable();
         table.string('name').notNullable();
         table.text('description').notNullable();
-        table.dateTime('creation').notNullable();
-        table.dateTime('last_update').notNullable();
+        table.timestamp('creation').notNullable();
+        table.timestamp('last_update').notNullable();
         table.integer('organization_id')
             .references('id_organization')
             .inTable('organization')

@@ -18,8 +18,8 @@ export async function up(knex: Knex) {
             .unique()
             .onUpdate('CASCADE')
             .onDelete('CASCADE');
-        table.dateTime('creation').notNullable();
-        table.dateTime('last_update').notNullable();
+        table.timestamp('creation').notNullable();
+        table.timestamp('last_update').notNullable();
     });
 }
 
