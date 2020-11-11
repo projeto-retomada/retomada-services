@@ -1,6 +1,4 @@
-/src/database/connection.ts
 .vscode
-knexfile.ts
 node_modules
 uploads/*
 !uploads/.gitkeep
