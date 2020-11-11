@@ -19,7 +19,7 @@ export default class UserController {
         senha = AES.encrypt(senha, 'retomadaKey');
 
         try {
-            await db('usuario').select('*')
+            await db('user').select('*')
             .where('email', email)
             .then(user => {
                 if (user[0]) {
@@ -62,7 +62,7 @@ export default class UserController {
 
         if (id) {
             try {
-                users = await db('usuario').select('*').where('id_usuario', id);
+                users = await db('user').select('*').where('id_user', id);
             } catch (err) {
                 return response.status(500).json({
                     error: 'Unexpected error getting user',
@@ -72,7 +72,7 @@ export default class UserController {
             }
         } else {
             try {
-                users = await db('usuario').select('*');
+                users = await db('user').select('*');
             }catch(err) {
                 return response.status(500).json({
                     error: 'Unexpected error getting user',
@@ -91,7 +91,7 @@ export default class UserController {
             grupo_risco,
             imune,
             metadata,
-            tipo_usuario,
+            tipo_user,
             email,
             senha,
             id_instituicao
@@ -100,18 +100,18 @@ export default class UserController {
         senha = AES.encrypt(senha, 'retomadaKey').toString();
 
         try {
-            await db('usuario').insert({
+            await db('user').insert({
                 nome,
                 cpf_cnpj,
                 grupo_risco,
                 imune,
                 metadata,
-                tipo_usuario,
+                tipo_user,
                 email,
                 senha,
                 id_instituicao
             }).then(async (user) => {
-                await db('usuario').where('id_usuario', user[0])
+                await db('user').where('id_user', user[0])
                     .then(recoveredUser =>{
                     return response.status(201).json(recoveredUser);
                 });
@@ -130,7 +130,7 @@ export default class UserController {
         const { id } = request.params;
 
         try {
-            await db('usuario').where('id_usuario', id).del().then(() => {
+            await db('user').where('id_user', id).del().then(() => {
                 return response.status(200).json({
                     message: 'User deleted successfully'
                 });
@@ -154,24 +154,24 @@ export default class UserController {
             grupo_risco,
             imune,
             metadata,
-            tipo_usuario,
+            tipo_user,
             id_instituicao
         } = request.body;
 
         try {
-            await db('usuario')
-                .where('id_usuario', id)
+            await db('user')
+                .where('id_user', id)
                 .update({
                     nome,
                     cpf_cnpj,
                     grupo_risco,
                     imune,
                     metadata,
-                    tipo_usuario,
+                    tipo_user,
                     id_instituicao
-                }).then(async(usuario) => {
-                    await db('usuario')
-                        .where('id_usuario', id)
+                }).then(async(user) => {
+                    await db('user')
+                        .where('id_user', id)
                         .then((recovedUser) => {
                             return response.status(200).json(recovedUser);
                         });
