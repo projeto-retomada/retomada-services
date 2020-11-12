@@ -1,6 +1,7 @@
 import { Response, Request } from 'express';
 import { AES, enc } from 'crypto-ts';
 import db from '../database/connection';
+import * as jwt from '../authentication/jwt';
 
 export default class UserController {
 
