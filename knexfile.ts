@@ -2,11 +2,11 @@ import { Config } from "knex";
 import path from 'path';
 
 export const configuration: Config = {
-    client: 'postgresql',
+    client: 'mysql',
     connection: {
         database: 'retomada',
-        user:     'postgres',
-        password: 'postgres'
+        user:     'root',
+        password: 'masterkey4191'
     },
     pool: {
         min: 2,
