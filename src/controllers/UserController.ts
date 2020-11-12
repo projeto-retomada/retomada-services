@@ -7,7 +7,6 @@ import { UsersIRepo } from '../repositories/users/UsersIRepo';
 import { injectable, inject } from 'tsyringe';
 
 export default class UserController {
-
     usersRepo: UsersRepo;
     userMapper: UserMapper;
 
@@ -25,7 +24,7 @@ export default class UserController {
         }
     }
 
-    public async create(request: Request, response: Response, next: NextFunction): Promise<any> {
+    public create = async(request: Request, response: Response, next: NextFunction) => {
         const body = request.body;
         if (body) {
             console.log(body);
