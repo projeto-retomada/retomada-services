@@ -1,4 +1,4 @@
-export interface Mapper<T> {
-    toPersistence(t: T):any;
-    toDTO(t: T):any;
+export interface Mapper<T, I, A>{
+    toDTO(t: T):A;
+    toPersistence(i: I):T;
 }

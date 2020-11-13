@@ -20,6 +20,7 @@
         "typescript": "^3.9.7"
     },
     "dependencies": {
+        "class-transformer": "^0.3.1",
         "class-validator": "^0.12.2",
         "cors": "^2.8.5",
         "crypto-js": "^4.0.0",

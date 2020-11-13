@@ -2,6 +2,9 @@ import { UserMapper } from './mappers/UserMapper';
 import express from 'express';
 import UserController from './controllers/UserController';
 import { UsersRepo } from './repositories/users/UsersRepo';
+import validationMiddleware from './error/ValidationMiddleware';
+import User from './models/User';
+import UserDTO from './models/UserInput';
 
 
 const routes = express.Router();
@@ -13,7 +16,9 @@ routes.get('/', (request, response) => {
 });
 
 routes.get('/users', userController.getAll);
-routes.post('/users', userController.create);
-
+routes.get('/users/:id', userController.getAll);
+routes.post('/users', validationMiddleware(UserDTO), userController.create);
+routes.put('/users/:id', validationMiddleware(UserDTO), userController.update);
+routes.delete('/users/:id', userController.delete);
 
 export default routes;
