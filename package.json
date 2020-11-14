@@ -21,6 +21,8 @@
         "typescript": "^3.9.7"
     },
     "dependencies": {
+        "class-transformer": "^0.3.1",
+        "class-validator": "^0.12.2",
         "cors": "^2.8.5",
         "crypto-js": "^4.0.0",
         "crypto-ts": "^1.0.2",
@@ -29,6 +31,7 @@
         "knex": "^0.21.4",
         "knex-migrate": "^1.7.4",
         "mysql": "^2.18.1",
-        "pg": "^8.5.0"
+        "pg": "^8.5.0",
+        "tsyringe": "^4.4.0"
     }
 }
