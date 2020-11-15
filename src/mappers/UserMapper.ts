@@ -1,3 +1,4 @@
+import moment from 'moment';
 import UserInput from '../models/UserInput';
 import User from './../models/User';
 import UserModel from './../models/UserModel';
@@ -27,6 +28,8 @@ export class UserMapper implements Mapper<User, UserInput, UserModel> {
         user.group_risk = userInput.group_risk;
         user.metadata = userInput.metadata;
         user.organization_id = userInput.organization_id;
+        user.creation = moment().format()
+        user.last_update = moment().format()
         return user;
     }
 

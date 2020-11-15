@@ -1,4 +1,5 @@
 import { AES, enc } from 'crypto-ts';
+import bcrypt from 'bcrypt';
 import db from '../database/connection';
 import * as jwt from '../authentication/jwt';
 import { Response, Request, NextFunction } from 'express';
@@ -48,9 +49,11 @@ export default class UserController {
         const body = request.body;
 
         if (body) {
+
             try {
-                const user = await this.usersRepo.save(this.userMapper.toPersistence(body)).then((err) => {
-                });
+                let salt = await bcrypt.genSalt(10)
+                body.password = await bcrypt.hash(body.password, salt)
+                const user = await this.usersRepo.save(this.userMapper.toPersistence(body)).then((err) => {});
                 return response.status(200).json(user).send(); 
             }catch (err) {
                 next(new HttpException(500, err.message || 'Unexpected error creating user', ''));

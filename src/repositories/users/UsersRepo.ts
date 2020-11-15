@@ -10,7 +10,12 @@ export class UsersRepo implements UsersIRepo {
         });
         return user[0];
     }
-
+    public async getUserByCondition(condition: Object) {
+        const user = await db('user').select('*').where(condition).catch((err) => {
+            throw new Error(err.sqlMessage);
+        });
+        return user[0];
+    }
     public async findAllUsers(): Promise<User[]> {
         const users = await db('user').select('*').catch((err) => {
             throw new Error(err.sqlMessage);
@@ -46,6 +51,8 @@ export class UsersRepo implements UsersIRepo {
         }).catch((err) => {
             throw new Error(err.sqlMessage);
         });
+
+        return user;
     }
 
     public async update(t: User, id: string): Promise<any> {

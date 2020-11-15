@@ -21,6 +21,7 @@
         "typescript": "^3.9.7"
     },
     "dependencies": {
+        "bcrypt": "^5.0.0",
         "class-transformer": "^0.3.1",
         "class-validator": "^0.12.2",
         "cors": "^2.8.5",
@@ -30,6 +31,7 @@
         "jsonwebtoken": "^8.5.1",
         "knex": "^0.21.4",
         "knex-migrate": "^1.7.4",
+        "moment": "^2.29.1",
         "mysql": "^2.18.1",
         "pg": "^8.5.0",
         "tsyringe": "^4.4.0"
