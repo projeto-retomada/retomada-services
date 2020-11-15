@@ -1,21 +1,22 @@
 import moment from 'moment';
 import UserInput from '../models/UserInput';
 import User from './../models/User';
-import UserModel from './../models/UserModel';
 import { Mapper } from './Mapper';
 
-export class UserMapper implements Mapper<User, UserInput, UserModel> {
+export class UserMapper implements Mapper<User, UserInput> {
 
     constructor() {}
 
-    toDTO(user: User): UserModel {
-        const userModel = new UserModel();
-        userModel.username = user.username;
-        userModel.email = user.email;
-        userModel.picture = user.picture;
-        userModel.password = user.password;
-        userModel.group_risk = user.group_risk;
-        userModel.metadata = user.metadata;
+    toDTO(user: User): any {
+        const userModel  = {
+            id_user : user.id_user,
+            username : user.username,
+            email : user.email,
+            picture : user.picture,
+            password : user.password,
+            group_risk : user.group_risk,
+            metadata : user.metadata
+        };
         return userModel;
     }
 

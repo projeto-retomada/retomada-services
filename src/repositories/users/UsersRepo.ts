@@ -42,14 +42,14 @@ export class UsersRepo implements UsersIRepo {
             picture: t.picture,
             metadata: t.metadata,
             group_risk: t.group_risk,
-            creation: t.creation,
-            last_update: t.last_update,
+            creation: new Date().toLocaleString(),
+            last_update: new Date().toLocaleString(),
             id_user: t.id_user,
             organization_id: t.organization_id,
         }).then((resp) => {
             return resp;
         }).catch((err) => {
-            throw new Error(err.sqlMessage);
+            throw new Error(err.detail);
         });
 
         return user;
@@ -64,16 +64,16 @@ export class UsersRepo implements UsersIRepo {
             metadata: t.metadata,
             group_risk: t.group_risk,
             creation: t.creation,
-            last_update: t.last_update,
+            last_update: new Date().toLocaleString(),
             id_user: t.id_user,
             organization_id: t.organization_id
         }).then(async (resp) => {
             const user = await db('user').select('*').where({ id_user: id }).catch((err) => {
-                throw new Error(err.sqlMessage);
+                throw new Error(err.detail);
             });
             return user[0];
         }).catch((err) => {
-            throw new Error(err.sqlMessage);
+            throw new Error(err.detail);
         });
     }
 
