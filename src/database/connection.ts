@@ -1,11 +1,12 @@
 import knex from 'knex';
 
 const db = knex({
-    client: 'mysql',
+    client: 'pg',
     connection: {
-        database: 'retomada',
-        user:     'root',
-        password: 'masterkey4191'
+        host : '127.0.0.1',
+        user:     'postgres',
+        password: 'postgresql',
+        database: 'retomada'
     },
     pool: {
         min: 2,

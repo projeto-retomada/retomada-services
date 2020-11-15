@@ -3,7 +3,6 @@ import express from 'express';
 import UserController from './controllers/UserController';
 import { UsersRepo } from './repositories/users/UsersRepo';
 import validationMiddleware from './error/ValidationMiddleware';
-import User from './models/User';
 import UserDTO from './models/UserInput';
 
 

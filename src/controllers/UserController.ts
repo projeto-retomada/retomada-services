@@ -3,7 +3,6 @@ import HttpException from '../error/HttpException';
 
 import { UsersRepo } from './../repositories/users/UsersRepo';
 import { UserMapper } from '../mappers/UserMapper';
-import UserModel from '../models/UserModel';
 
 export default class UserController {
 
@@ -30,7 +29,7 @@ export default class UserController {
         } else {
             try {
                 await this.usersRepo.findAllUsers().then((resp) => {
-                    const format: Array<UserModel> = resp.map((element) => {
+                    const format: Array<any> = resp.map((element) => {
                        return this.userMapper.toDTO(element);
                     });
                     return response.status(200).json(format).send(); 
