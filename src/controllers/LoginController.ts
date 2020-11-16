@@ -5,7 +5,7 @@ import { Response, Request, NextFunction } from 'express';
 import HttpException from '../error/HttpException';
 import { UsersRepo } from './../repositories/users/UsersRepo';
 import { UserMapper } from '../mappers/UserMapper';
-import UserModel from '../models/UserModel';
+import UserModel from '../models/User';
 
 export default class LoginController {
 
@@ -22,7 +22,9 @@ export default class LoginController {
         const [, hash] = request.headers.authorization.split(' ');
         const [email, password] = Buffer.from(hash, 'base64').toString().split(":")
         
-        console.log(email, password)
+        if(email === undefined || password === undefined) {
+            return response.status(401).send("Unauthorized");
+        }
 
         try {
             
