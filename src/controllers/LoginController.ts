@@ -40,7 +40,7 @@ export default class LoginController {
                 return response.status(401).send("Unauthorized");
             }
 
-            const token = jwt.sign({user: user.id_user})
+            const token = await jwt.sign({user: user.id_user})
 
             // const verify = jwt.verify(token + "asd")
             // console.log(verify)

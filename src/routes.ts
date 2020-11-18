@@ -3,7 +3,7 @@ import express from 'express';
 import LoginController from './controllers/LoginController';
 import UserController from './controllers/UserController';
 import { UsersRepo } from './repositories/users/UsersRepo';
-import validationMiddleware from './error/ValidationMiddleware';
+import {authenticateMiddleware, validationMiddleware} from './error/ValidationMiddleware';
 import UserDTO from './models/UserInput';
 
 
@@ -17,11 +17,11 @@ routes.get('/', (request, response) => {
     return response.send('200: OK');
 });
 
-routes.get('/users', userController.getAll);
-routes.get('/users/:id', userController.getAll);
-routes.post('/users', validationMiddleware(UserDTO), userController.create);
-routes.put('/users/:id', validationMiddleware(UserDTO), userController.update);
-routes.delete('/users/:id', userController.delete);
+routes.get('/users', authenticateMiddleware, userController.getAll);
+routes.get('/users/:id', authenticateMiddleware, userController.getAll);
+routes.post('/users', authenticateMiddleware, validationMiddleware(UserDTO), userController.create);
+routes.put('/users/:id', authenticateMiddleware, validationMiddleware(UserDTO), userController.update);
+routes.delete('/users/:id', authenticateMiddleware, userController.delete);
 
 routes.get('/login', loginController.login);
 

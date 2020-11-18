@@ -7,7 +7,7 @@ import {UsersRepo} from '../repositories/users/UsersRepo';
 
 const userRepo = new UsersRepo()
 
-const authenticateMiddleware = async (req, res, next) => {
+export const authenticateMiddleware = async (req, res, next) => {
   const [, token] = req.headers.authorization.split(' ');
   try {
     const payload = await jwt.verify(token);
@@ -23,9 +23,8 @@ const authenticateMiddleware = async (req, res, next) => {
   }
 }
 
-function validationMiddleware<T> (type: any): express.RequestHandler {
+export function validationMiddleware<T> (type: any): express.RequestHandler {
   return async (req, res, next) => {
-
     validate(plainToClass(type, req.body))
       .then( async(errors: ValidationError[]) => {
         if (errors.length > 0) {
@@ -39,4 +38,3 @@ function validationMiddleware<T> (type: any): express.RequestHandler {
 }
 
 
-export default validationMiddleware;
