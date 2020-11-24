@@ -29,8 +29,8 @@ export class UserMapper implements Mapper<User, UserInput> {
         user.group_risk = userInput.group_risk;
         user.metadata = userInput.metadata;
         user.organization_id = userInput.organization_id;
-        user.creation = moment().format()
-        user.last_update = moment().format()
+        user.creation = moment().format();
+        user.last_update = moment().format();
         return user;
     }
 

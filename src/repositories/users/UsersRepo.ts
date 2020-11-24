@@ -6,19 +6,19 @@ export class UsersRepo implements UsersIRepo {
 
     public async getUserById(idUser: string): Promise<User> {
         const user = await db('user').select('*').where({ id_user: idUser }).catch((err) => {
-            throw new Error(err.sqlMessage);
+            throw new Error(err.detail);
         });
         return user[0];
     }
     public async getUserByCondition(condition: Object) {
         const user = await db('user').select('*').where(condition).catch((err) => {
-            throw new Error(err.sqlMessage);
+            throw new Error(err.detail);
         });
         return user[0];
     }
     public async findAllUsers(): Promise<User[]> {
         const users = await db('user').select('*').catch((err) => {
-            throw new Error(err.sqlMessage);
+            throw new Error(err.detail);
         });
         return users;
     }
@@ -29,7 +29,7 @@ export class UsersRepo implements UsersIRepo {
 
     public async delete(id: String): Promise<any> {
         const user = await db('user').select('*').where({id_user: id}).del().catch((err) => {
-            throw new Error(err.sqlMessage);
+            throw new Error(err.detail);
         });
         return user;
     }

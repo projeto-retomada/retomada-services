@@ -7,7 +7,7 @@ import {UsersRepo} from '../repositories/users/UsersRepo';
 
 const userRepo = new UsersRepo()
 
-export const authenticateMiddleware = async (req, res, next) => {
+export const authenticateMiddleware = async (req: any, res: any, next: any) => {
   const [, token] = req.headers.authorization.split(' ');
   try {
     const payload = await jwt.verify(token);
