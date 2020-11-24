@@ -10,6 +10,9 @@ As tecnologias listadas abaixo foram utilizadas no projeto.
 - [Typescript](https://www.typescriptlang.org)
 - [Express](https://expressjs.com/pt-br/)
 - [MySQL](https://www.mysql.com)
+- [Moment.js](https://momentjs.com)
+- [Knex](http://knexjs.org)
+- [Postgresql](https://www.postgresql.org)
 
 ## :information_source: Instruções para clone
 ### Configuração da API
