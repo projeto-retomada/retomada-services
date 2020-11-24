@@ -28,4 +28,4 @@ $ npm knex:seed
 $ npm start
 ```
 
-Made with :heart: by Luis and Miriéle
+Made with :heart: by Luis, Miriéle and Guilherme
