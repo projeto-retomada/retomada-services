@@ -89,4 +89,17 @@ export default class UserController {
             next(new HttpException(404, 'Method not found', ''));
         }
     }
+
+    public getActivities = async(request: Request, response: Response, next: NextFunction) => {
+
+        const { username } = request.params;
+        const { size } = request.query;
+        
+        if (size) {
+
+        } else {
+            
+        }
+        return response.status(200).send('');
+    }
 }

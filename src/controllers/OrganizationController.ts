@@ -53,4 +53,37 @@ export default class OrganizationController {
             }
         }
     }
+
+    public delete = async(request: Request, response: Response, next: NextFunction) => {
+
+        const { id } = request.params;
+
+        if (id) {
+            try {
+                const user = await this.organizationRepo.delete(id);
+                return response.status(204).send(); 
+            }catch(err) {
+                next(new HttpException(500, err.message || 'Unexpected error deleting organization', ''));
+            }
+        } else {
+            next(new HttpException(404, 'Method not found', ''));
+        }
+    }
+
+    public update = async(request: Request, response: Response, next: NextFunction) => {
+
+        const { id } = request.params;
+        const body = request.body;
+
+        if (body && id) {
+            try {
+                const user:any = await this.organizationRepo.update(this.organizationMapper.toPersistence(body), id);
+                return response.status(200).json(user);
+            }catch(err) {
+                next(new HttpException(500, err.message || 'Unexpected error updating organization', ''));
+            }
+        } else {
+            next(new HttpException(404, 'Method not found', ''));
+        }
+    }
 }

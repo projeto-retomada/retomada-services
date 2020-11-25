@@ -15,7 +15,6 @@ export async function up(knex: Knex) {
             .inTable('activity')
             .notNullable()
             .unsigned()
-            .unique()
             .onUpdate('CASCADE')
             .onDelete('CASCADE');
         table.timestamp('creation').notNullable();

@@ -22,8 +22,11 @@ export class OrganizationRepo implements OrganizationIRepo {
         throw new Error("Method not implemented.");
     }
 
-    delete(id: any): Promise<any> {
-        throw new Error("Method not implemented.");
+    async delete(id: any): Promise<any> {
+        const organization = await db('organization').select('*').where({id_organization: id}).del().catch((err) => {
+            throw new Error(err.detail);
+        });
+        return organization;
     }
 
     async save(t: Organization): Promise<any> {
@@ -43,8 +46,20 @@ export class OrganizationRepo implements OrganizationIRepo {
         return organization;
     }
 
-    update(t: Organization, id: any): Promise<any> {
-        throw new Error("Method not implemented.");
+    async update(t: Organization, id: any): Promise<any> {
+        const organization = await db('organization').where({id_organization: id}).update({
+            logo: t.logo,
+            email: t.email,
+            name: t.name,
+            last_update: new Date().toLocaleString()
+        }).then(async (resp) => {
+            const organizations = await db('organization').select('*').where({ id_organization: id }).catch((err) => {
+                throw new Error(err.detail);
+            });
+            return organizations[0];
+        }).catch((err) => {
+            throw new Error(err.detail);
+        });
     }
 
 }

@@ -16,7 +16,7 @@ const routes = express.Router();
 
 const userController = new UserController(new UsersRepo(),new UserMapper());
 const loginController = new LoginController(new UsersRepo(),new UserMapper());
-const organizarionController = new OrganizationController(new OrganizationRepo(), new OrganizationMapper());
+const organizationController = new OrganizationController(new OrganizationRepo(), new OrganizationMapper());
 
 
 routes.get('/', (request, response) => {
@@ -25,15 +25,16 @@ routes.get('/', (request, response) => {
 
 routes.get('/users', authenticateMiddleware, userController.getAll);
 routes.get('/users/:id', authenticateMiddleware, userController.getAll);
-routes.post('/users', authenticateMiddleware, validationMiddleware(UserInput), userController.create);
+routes.post('/users', validationMiddleware(UserInput), userController.create);
 routes.put('/users/:id', authenticateMiddleware, validationMiddleware(UserInput), userController.update);
 routes.delete('/users/:id', authenticateMiddleware, userController.delete);
+routes.get('/users/:username/activities', userController.getActivities);
 
 routes.get('/login', loginController.login);
 
-routes.get('/organizations', organizarionController.getAll);
-routes.get('/organizations/:id', organizarionController.getAll);
-routes.post('/organizations', validationMiddleware(OrganizationInput), organizarionController.create);
-
+routes.get('/organizations', organizationController.getAll);
+routes.get('/organizations/:id', organizationController.getAll);
+routes.post('/organizations', validationMiddleware(OrganizationInput), organizationController.create);
+routes.put('/organizations/:id', validationMiddleware(OrganizationInput), organizationController.update);
 
 export default routes;
