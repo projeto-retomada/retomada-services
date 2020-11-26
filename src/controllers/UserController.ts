@@ -93,46 +93,38 @@ export default class UserController {
     public getActivities = async(request: Request, response: Response, next: NextFunction) => {
 
         const { username } = request.params;
-        const { size } = request.query;
-        
-        if (size) {
-            try {
-                const activities:any = await this.usersRepo.getUserActivities(username, parseInt(size.toString()));
-                return response.status(200).json(activities);
-            }catch(err) {
-                next(new HttpException(500, err.message || 'Unexpected error getting user activities', ''));
-            }
-        } else {
-            try {
-                const activities:any = await this.usersRepo.getUserActivities(username, 1);
-                return response.status(200).json(activities);
-            }catch(err) {
-                next(new HttpException(500, err.message || 'Unexpected error getting user activities', ''));
-            }
+        var { size } = request.query;
+
+        if (!size) {
+            size = '1'
         }
+        
+        try {
+            const activities:any = await this.usersRepo.getUserActivities(username, parseInt(size.toString()));
+            return response.status(200).json(activities);
+        }catch(err) {
+            next(new HttpException(500, err.message || 'Unexpected error getting user activities', ''));
+        }
+
         return response.status(200).send('');
     }
 
     public getUserLastPlaces = async(request: Request, response: Response, next: NextFunction) => {
 
         const { username } = request.params;
-        const { size } = request.query;
-        
-        if (size) {
-            try {
-                const activities:any = await this.usersRepo.getUserLastPlacesPassed(username, parseInt(size.toString()));
-                return response.status(200).json(activities);
-            }catch(err) {
-                next(new HttpException(500, err.message || 'Unexpected error getting user last places', ''));
-            }
-        } else {
-            try {
-                const activities:any = await this.usersRepo.getUserLastPlacesPassed(username, 1);
-                return response.status(200).json(activities);
-            }catch(err) {
-                next(new HttpException(500, err.message || 'Unexpected error getting user last places', ''));
-            }
+        var { size } = request.query;
+
+        if (!size) {
+            size = '1'
         }
+        
+        try {
+            const activities:any = await this.usersRepo.getUserLastPlacesPassed(username, parseInt(size.toString()));
+            return response.status(200).json(activities);
+        }catch(err) {
+            next(new HttpException(500, err.message || 'Unexpected error getting user last places', ''));
+        }
+        
         return response.status(200).send('');
     }
 }

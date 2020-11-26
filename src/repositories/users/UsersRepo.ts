@@ -103,7 +103,7 @@ export class UsersRepo implements UsersIRepo {
             .catch((err) => {
                 throw new Error(err.detail);
         });
-        console.log(activities);
+        
         if (size < activities.length) {
             return activities.slice(0,size);
         } else {
