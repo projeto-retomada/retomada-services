@@ -35,7 +35,7 @@ $ npm start
 - (DELETE) /users/:id
 - (GET) /users/:username/activities | optional (query: size)
 - (GET) /users/:username/last-places | optional (query: size)
- (JSON RETORNO) : {
+- (JSON RETORNO) : {
     "id_user": 2,
     "username": "gonzalez",
     "email": "gonzalez@email.com",
