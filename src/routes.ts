@@ -23,12 +23,13 @@ routes.get('/', (request, response) => {
     return response.send('200: OK');
 });
 
-routes.get('/users', authenticateMiddleware, userController.getAll);
+routes.get('/users', userController.getAll);
 routes.get('/users/:id', authenticateMiddleware, userController.getAll);
 routes.post('/users', validationMiddleware(UserInput), userController.create);
 routes.put('/users/:id', authenticateMiddleware, validationMiddleware(UserInput), userController.update);
 routes.delete('/users/:id', authenticateMiddleware, userController.delete);
 routes.get('/users/:username/activities', userController.getActivities);
+routes.get('/users/:username/last-places', userController.getUserLastPlaces);
 
 routes.get('/login', loginController.login);
 

@@ -46,7 +46,6 @@ export class UsersRepo implements UsersIRepo {
             group_risk: t.group_risk,
             creation: new Date().toLocaleString(),
             last_update: new Date().toLocaleString(),
-            id_user: t.id_user,
             organization_id: t.organization_id,
         }).then((resp) => {
             return resp;
@@ -67,7 +66,6 @@ export class UsersRepo implements UsersIRepo {
             group_risk: t.group_risk,
             creation: t.creation,
             last_update: new Date().toLocaleString(),
-            id_user: t.id_user,
             organization_id: t.organization_id
         }).then(async (resp) => {
             const user = await db('user').select('*').where({ id_user: id }).catch((err) => {
@@ -79,11 +77,37 @@ export class UsersRepo implements UsersIRepo {
         });
     }
 
-    async getUserActivities(idUser: string, size: number): Promise<any> {
-        const user = await db('activity').select('*').where({ id_activity: idUser }).catch((err) => {
-            throw new Error(err.detail);
+    async getUserActivities(username: string, size: number): Promise<any> {
+        const activities = await db('user')
+            .join('activity_interaction', 'user.id_user', '=', 'activity_interaction.user_id')
+            .join('activity', 'activity.id_activity', '=', 'activity_interaction.activity_id')
+            .select('activity.name','activity.creation', 'activity.last_update', 'activity.start_date', 'activity.end_date', 'activity.description')
+            .where('username', username)
+            .catch((err) => {
+                throw new Error(err.detail);
         });
-        return user[0];
+        if (size < activities.length) {
+            return activities.slice(0,size);
+        } else {
+            return activities;
+        }
     }
 
+    async getUserLastPlacesPassed(username: string, size: number): Promise<any> {
+        const activities = await db('user')
+            .join('activity_interaction', 'user.id_user', '=', 'activity_interaction.user_id')
+            .join('activity', 'activity.id_activity', '=', 'activity_interaction.activity_id')
+            .join('place', 'place.id_place', '=', 'activity.place_id')
+            .select('place.id_place','place.name', 'place.maximum_capacity', 'place.open_area', 'activity_interaction.creation as date')
+            .where('username', username)
+            .catch((err) => {
+                throw new Error(err.detail);
+        });
+        console.log(activities);
+        if (size < activities.length) {
+            return activities.slice(0,size);
+        } else {
+            return activities;
+        }
+    }
 }

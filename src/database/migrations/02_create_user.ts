@@ -2,8 +2,8 @@ import Knex from 'knex';
 
 export async function up(knex: Knex) {
     return knex.schema.createTable('user', table => {
-        table.increments('id_user').primary();
-        table.string('username').notNullable();
+        table.increments('id_user');
+        table.string('username').notNullable().unique();
         table.string('email').notNullable().unique();
         table.string('picture').notNullable();
         table.specificType('group_risk', 'char(1)').notNullable();
