@@ -15,7 +15,7 @@ import OrganizationInput from './models/OrganizationInput';
 const routes = express.Router();
 
 const userController = new UserController(new UsersRepo(),new UserMapper());
-const loginController = new LoginController(new UsersRepo(),new UserMapper());
+const loginController = new LoginController(new UsersRepo(),new UserMapper(), new OrganizationRepo());
 const organizationController = new OrganizationController(new OrganizationRepo(), new OrganizationMapper());
 
 

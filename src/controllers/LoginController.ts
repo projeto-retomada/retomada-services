@@ -1,3 +1,4 @@
+import { OrganizationRepo } from './../repositories/organization/OrganizationRepo';
 import { AES, enc } from 'crypto-ts';
 import bcrypt from 'bcrypt';
 import * as jwt from '../authentication/jwt';
@@ -11,10 +12,12 @@ export default class LoginController {
 
     usersRepo: UsersRepo;
     userMapper: UserMapper;
+    organizationRepo: OrganizationRepo;
 
-    constructor(usersRepo: UsersRepo, userMapper: UserMapper) {
+    constructor(usersRepo: UsersRepo, userMapper: UserMapper,organizationRepo: OrganizationRepo) {
         this.usersRepo = usersRepo;
         this.userMapper = userMapper;
+        this.organizationRepo = organizationRepo;
     }
 
     public login = async(request: Request, response: Response, next: NextFunction) => {
@@ -40,11 +43,12 @@ export default class LoginController {
                 return response.status(401).send("Unauthorized");
             }
 
-            const token = await jwt.sign({user: user.id_user})
-
-            // const verify = jwt.verify(token + "asd")
-            // console.log(verify)
-            return response.status(200).send({user, token})
+            const token = await jwt.sign({user: user.id_user});
+            let organization:any;
+            await this.organizationRepo.getOrganizationById(user.organization_id).then((resp) => {
+                organization = resp;
+            });
+            return response.status(200).send({user, token, organization})
 
         }catch(err){
 
