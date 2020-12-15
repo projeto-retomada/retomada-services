@@ -12,11 +12,20 @@ import { OrganizationRepo } from './repositories/organization/OrganizationRepo';
 import { OrganizationMapper } from './mappers/OrganizationMapper';
 import OrganizationInput from './models/OrganizationInput';
 
+
+import QuestionnaireController from './controllers/QuestionnaireController';
+import { QuestionnaireRepo } from './repositories/questionnaire/QuestionnaireRepo';
+import { QuestionnaireMapper } from './mappers/QuestionnaireMapper';
+import QuestionnaireInput from './models/QuestionnaireInput';
+
+
 const routes = express.Router();
 
 const userController = new UserController(new UsersRepo(),new UserMapper());
 const loginController = new LoginController(new UsersRepo(),new UserMapper(), new OrganizationRepo());
 const organizationController = new OrganizationController(new OrganizationRepo(), new OrganizationMapper());
+const questionnaireController = new QuestionnaireController(new QuestionnaireRepo(), new QuestionnaireMapper());
+
 
 
 routes.get('/', (request, response) => {
@@ -37,5 +46,12 @@ routes.get('/organizations', organizationController.getAll);
 routes.get('/organizations/:id', organizationController.getAll);
 routes.post('/organizations', validationMiddleware(OrganizationInput), organizationController.create);
 routes.put('/organizations/:id', validationMiddleware(OrganizationInput), organizationController.update);
+
+routes.get('/questionnaire', questionnaireController.getAll);
+routes.get('/questionnaire/:id', questionnaireController.getAll);
+routes.post('/questionnaire', validationMiddleware(QuestionnaireInput), questionnaireController.create);
+routes.put('/questionnaire/:id', validationMiddleware(QuestionnaireInput), questionnaireController.update);
+routes.delete('/questionnaire/:id', questionnaireController.delete);
+
 
 export default routes;
