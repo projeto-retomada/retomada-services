@@ -10,6 +10,20 @@ class UserInput {
     public username: string;
 
     @IsString()
+    @IsNotEmpty({message: 'Name cannot be empty string'}) 
+    @MaxLength(255, {
+        message:'Name too long'
+    })
+    public name: string;
+
+    @IsString()
+    @IsNotEmpty({message: 'Role cannot be empty string'}) 
+    @MaxLength(255, {
+        message:'Role too long'
+    })
+    public role: string;
+
+    @IsString()
     @IsNotEmpty({message: 'Email cannot be empty string'}) 
     @IsEmail()
     public email: string;
