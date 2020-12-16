@@ -10,6 +10,8 @@ export class UserMapper implements Mapper<User, UserInput> {
     toDTO(user: User): any {
         const userModel  = {
             id_user : user.id_user,
+            name : user.name,
+            role: user.role,
             username : user.username,
             email : user.email,
             picture : user.picture,
@@ -22,6 +24,8 @@ export class UserMapper implements Mapper<User, UserInput> {
 
     toPersistence(userInput: UserInput): User {
         const user = new User();
+        user.name = userInput.name,
+        user.role = userInput.role,
         user.username = userInput.username;
         user.email = userInput.email;
         user.picture = userInput.picture;

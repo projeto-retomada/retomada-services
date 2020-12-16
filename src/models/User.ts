@@ -1,5 +1,7 @@
 class User {
     public id_user: string;
+    public name: string;
+    public role: string;
     public username: string;
     public email: string; 
     public picture: string;
