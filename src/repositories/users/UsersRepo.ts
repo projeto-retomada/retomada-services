@@ -13,7 +13,12 @@ export class UsersRepo implements UsersIRepo {
 
     public async getUserByCondition(condition: Object) {
         const user = await db('user').select('*').where(condition).catch((err) => {
+<<<<<<< HEAD
             throw new Error(err.detail);
+=======
+            console.log(err);
+            throw new Error(err.sqlMessage);
+>>>>>>> 3b5febc3694a552215bbe41b8e7dc02490f80c66
         });
         return user[0];
     }

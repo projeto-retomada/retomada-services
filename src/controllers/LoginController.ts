@@ -1,12 +1,10 @@
 import { OrganizationRepo } from './../repositories/organization/OrganizationRepo';
-import { AES, enc } from 'crypto-ts';
 import bcrypt from 'bcrypt';
 import * as jwt from '../authentication/jwt';
 import { Response, Request, NextFunction } from 'express';
 import HttpException from '../error/HttpException';
 import { UsersRepo } from './../repositories/users/UsersRepo';
 import { UserMapper } from '../mappers/UserMapper';
-import UserModel from '../models/User';
 
 export default class LoginController {
 
