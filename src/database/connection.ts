@@ -5,7 +5,7 @@ const db = knex({
     connection: {
         database: 'retomada',
         user:     'postgres',
-        password: 'postgresql'
+        password: 'postgres'
     },
     pool: {
         min: 2,
