@@ -20,7 +20,7 @@ export class PlacesController {
                     return response.status(200).json(resp).send(); 
                 });
             } catch (err) {
-                next(new HttpException(500, 'Unexpected error getting place', err.sqlMessage));
+                next(new HttpException(err.status || 500 , err.message || 'Unexpected error getting place', err.detail));
             }
         } else {
             try {
@@ -28,7 +28,7 @@ export class PlacesController {
                     return response.status(200).json(resp).send(); 
                 });
             } catch (err) {
-                next(new HttpException(500, 'Unexpected error getting places', err.sqlMessage));
+                next(new HttpException(err.status || 500 , err.message || 'Unexpected error getting place', err.detail));
             }
         }
     }
@@ -44,7 +44,7 @@ export class PlacesController {
                 const place = await this.placesRepo.savePlace(idOrganization, body);
                 return response.status(201).json(place).send(); 
             }catch (err) {
-                next(new HttpException(500, err.message || 'Unexpected error saving Place', ''));
+                next(new HttpException(err.status || 500, err.message || 'Unexpected error saving Place', err.detail));
             }
         }
     }

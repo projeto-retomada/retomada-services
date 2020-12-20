@@ -27,10 +27,8 @@ const routes = express.Router();
 const userController = new UserController(new UsersRepo(),new UserMapper());
 const loginController = new LoginController(new UsersRepo(),new UserMapper(), new OrganizationRepo());
 const organizationController = new OrganizationController(new OrganizationRepo(), new OrganizationMapper());
-const placesController = new PlacesController(new PlacesRepo());
+const placesController = new PlacesController(new PlacesRepo(new OrganizationRepo()));
 const questionnaireController = new QuestionnaireController(new QuestionnaireRepo(), new QuestionnaireMapper());
-
-
 
 routes.get('/', (request, response) => {
     return response.send('200: OK');
@@ -55,6 +53,7 @@ routes.put('/organizations/:id', validationMiddleware(OrganizationInput), organi
 routes.get('/organizations/:idOrganization/places', placesController.get);
 routes.get('/organizations/:idOrganization/places/:idPlace', placesController.get);
 routes.post('/organizations/:idOrganization/places', validationMiddleware(PlaceInput), placesController.create);
+routes.put('/organizations/:idOrganization/places/:idPlace', validationMiddleware(PlaceInput), placesController.update);
 routes.delete('/organizations/:idOrganization/places/:idPlace', placesController.delete);
 
 routes.get('/questionnaire', authenticateMiddleware, questionnaireController.getAll);
