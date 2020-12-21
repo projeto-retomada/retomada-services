@@ -58,6 +58,9 @@ routes.delete('/organizations/:idOrganization/places/:idPlace', placesController
 
 routes.get('/questionnaire', authenticateMiddleware, questionnaireController.getAll);
 routes.get('/questionnaire/:id',authenticateMiddleware,  questionnaireController.getAll);
+routes.get('/questionnaire/:filters',authenticateMiddleware,  questionnaireController.getByParameters);
+routes.get('/questionnaire/:role/:idOrganization',authenticateMiddleware,  questionnaireController.getAllQuestsByRole);
+routes.get('/questionnaire/:id',authenticateMiddleware,  questionnaireController.getAll);
 routes.post('/questionnaire', authenticateMiddleware, validationMiddleware(QuestionnaireInput), questionnaireController.create);
 routes.put('/questionnaire/:id', authenticateMiddleware, validationMiddleware(QuestionnaireInput), questionnaireController.update);
 routes.delete('/questionnaire/:id', authenticateMiddleware, questionnaireController.delete);

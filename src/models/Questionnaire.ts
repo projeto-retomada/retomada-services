@@ -3,7 +3,7 @@ class Questionnaire {
     public creation: string;
     public last_update: string;
     public answer: string;
-    public user_id: string;
+    public user_id: number;
 }
 
 export default Questionnaire
