@@ -22,7 +22,7 @@ export default class LoginController {
 
         const [, hash] = request.headers.authorization.split(' ');
         const [email, password] = Buffer.from(hash, 'base64').toString().split(":")
-        
+
         if(email === undefined || password === undefined) {
             return response.status(401).send("Unauthorized");
         }

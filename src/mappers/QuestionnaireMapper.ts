@@ -9,7 +9,8 @@ export class QuestionnaireMapper implements Mapper<Questionnaire, QuestionnaireI
         const questionnaireModel  = {
             id_health_quest: t.id_health_quest,
             answer: t.answer,
-            user_id: t.user_id
+            user_id: t.user_id,
+            creation: t.creation
         };
         return questionnaireModel;
     }
