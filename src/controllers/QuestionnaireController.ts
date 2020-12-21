@@ -12,33 +12,6 @@ export default class QuestionnaireController {
         this.questionnaireRepo = QuestionnaireRepo;
         this.questionnaireMapper = QuestionnaireMapper;
     }
-
-    public getAll = async(request: Request, response: Response, next: NextFunction) => {
-
-        const { id } = request.params;
-        
-        if (id) {
-            try {
-                await this.questionnaireRepo.getQuestionnaireById(id).then((resp) => {
-                    return response.status(200).json(resp).send(); 
-                });
-            } catch (err) {
-                next(new HttpException(500, 'Unexpected error getting organization', err.sqlMessage));
-            }
-        } else {
-            try {
-                await this.questionnaireRepo.findAllQuest().then((resp) => {
-                    const format: Array<any> = resp.map((element) => {
-                       return this.questionnaireMapper.toDTO(element);
-                    });
-                    return response.status(200).json(format).send(); 
-                });
-            } catch (err) {
-                next(new HttpException(500, 'Unexpected error getting questionnaire', err.detail));
-            }
-        }
-    }
-
     public getAllQuestsByRole = async(request: Request, response: Response, next: NextFunction) => {
 
         const { role, idOrganization } = request.params;
@@ -47,6 +20,8 @@ export default class QuestionnaireController {
             try {
                 await this.questionnaireRepo.getAllQuestsByRole(parseInt(idOrganization), role.toUpperCase()).then((resp) => {
                     return response.status(200).json(resp).send(); 
+                }).catch((err) => {
+                    throw new Error(err.detail);
                 });
             } catch (err) {
                 return response.status(500).json(err).send(); 
@@ -55,9 +30,9 @@ export default class QuestionnaireController {
     }
 
     public getByParameters = async(request: Request, response: Response, next: NextFunction) => {
+        const stringFilters = request.query.filters as string;
+        const filters = JSON.parse(stringFilters);
 
-        const { filters } = request.params;
-        console.log(filters);
         if (filters && Object.keys(filters).length) {
             try {
                 await this.questionnaireRepo.getQuestByCondition(filters).then((resp) => {
