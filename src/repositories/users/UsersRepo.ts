@@ -1,6 +1,7 @@
 import User from "../../models/User";
 import db from '../../database/connection';
 import { UsersIRepo } from "./UsersIRepo";
+import HttpException from "../../error/HttpException";
 
 export class UsersRepo implements UsersIRepo {
 
@@ -40,6 +41,8 @@ export class UsersRepo implements UsersIRepo {
         const user = await db('user').insert({
             username: t.username,
             password: t.password,
+            name: t.name,
+            role: t.role,
             email: t.email,
             picture: t.picture,
             metadata: t.metadata,
@@ -50,7 +53,7 @@ export class UsersRepo implements UsersIRepo {
         }).then((resp) => {
             return resp;
         }).catch((err) => {
-            throw new Error(err.detail);
+            throw new HttpException(400,err.detail,'');
         });
 
         return user;

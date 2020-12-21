@@ -1,4 +1,5 @@
 import db from "../../database/connection";
+import HttpException from "../../error/HttpException";
 import Organization from "../../models/Organization";
 import { OrganizationIRepo } from "./OrganizationIRepo";
 
@@ -8,6 +9,9 @@ export class OrganizationRepo implements OrganizationIRepo {
         const organization = await db('organization').select('*').where({ id_organization: idOrganization }).catch((err) => {
             throw new Error(err.detail);
         });
+        if (organization.length === 0) {
+            throw new HttpException(404, `Cannot find organization with id =${idOrganization}`, '');
+        }
         return organization[0];
     }
 
