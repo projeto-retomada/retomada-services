@@ -22,11 +22,12 @@ import { QuestionnaireMapper } from './mappers/QuestionnaireMapper';
 import QuestionnaireInput from './models/QuestionnaireInput';
 import { UsergroupRepo } from './repositories/usergroup/UsergroupRepo';
 import UsergroupInput from './models/UsergroupInput';
+import { UserUsergroupRelationRepo } from './repositories/userUsergroupRelation/UserUsergroupRelationRepo';
 
 const routes = express.Router();
 
-const userController = new UserController(new UsersRepo(),new UserMapper());
-const loginController = new LoginController(new UsersRepo(),new UserMapper(), new OrganizationRepo());
+const userController = new UserController(new UsersRepo(new UserUsergroupRelationRepo),new UserMapper());
+const loginController = new LoginController(new UsersRepo(new UserUsergroupRelationRepo),new UserMapper(), new OrganizationRepo());
 const organizationController = new OrganizationController(new OrganizationRepo(), new OrganizationMapper());
 const placesController = new PlacesController(new PlacesRepo(new OrganizationRepo()));
 const questionnaireController = new QuestionnaireController(new QuestionnaireRepo(), new QuestionnaireMapper());

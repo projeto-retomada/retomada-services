@@ -7,7 +7,7 @@ export class UserMapper implements Mapper<User, UserInput> {
 
     constructor() {}
 
-    toDTO(user: User): any {
+    toDTO(user: any): any {
         const userModel  = {
             id_user : user.id_user,
             name : user.name,
@@ -18,7 +18,7 @@ export class UserMapper implements Mapper<User, UserInput> {
             password : user.password,
             group_risk : user.group_risk,
             metadata : user.metadata,
-            class: user.class
+            class: user.usergroup_id
         };
         return userModel;
     }

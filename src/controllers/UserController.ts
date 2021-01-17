@@ -21,7 +21,7 @@ export default class UserController {
         if (id) {
             try {
                 await this.usersRepo.getUserById(id).then((resp) => {
-                    return response.status(200).json(resp);
+                    return response.status(200).json(this.userMapper.toDTO(resp));
                 });
             } catch (err) {
                 next(new HttpException(500, 'Unexpected error getting user', err.sqlMessage));
@@ -49,10 +49,9 @@ export default class UserController {
             try {
                 let salt = await bcrypt.genSalt(10)
                 body.password = await bcrypt.hash(body.password, salt)
-                const user = await this.usersRepo.save(this.userMapper.toPersistence(body)).then((err) => {});
+                const user = await this.usersRepo.save(this.userMapper.toPersistence(body));
                 return response.status(201).json(user);
             }catch (err) {
-                console.log(err);
                 next(new HttpException(err.status || 500, err.message || 'Unexpected error creating user', ''));
             }
         }
@@ -82,7 +81,7 @@ export default class UserController {
         if (body && id) {
             try {
                 const user:any = await this.usersRepo.update(this.userMapper.toPersistence(body), id);
-                return response.status(200).json(user);
+                return response.status(200).json(this.userMapper.toDTO(user));
             }catch(err) {
                 next(new HttpException(500, err.message || 'Unexpected error updating user', ''));
             }

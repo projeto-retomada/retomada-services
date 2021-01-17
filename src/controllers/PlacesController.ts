@@ -42,7 +42,7 @@ export class PlacesController {
 
             try {
                 const place = await this.placesRepo.savePlace(idOrganization, body);
-                return response.status(201).json(place).send(); 
+                return response.status(201).json(place); 
             }catch (err) {
                 next(new HttpException(err.status || 500, err.message || 'Unexpected error saving Place', err.detail));
             }
