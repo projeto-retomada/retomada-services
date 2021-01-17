@@ -2,6 +2,7 @@ import User from "../../models/User";
 import db from '../../database/connection';
 import { UsersIRepo } from "./UsersIRepo";
 import HttpException from "../../error/HttpException";
+import moment from 'moment';
 
 export class UsersRepo implements UsersIRepo {
 
@@ -38,6 +39,7 @@ export class UsersRepo implements UsersIRepo {
     }
 
     public async save(t: User): Promise<any> {
+        console.log(t);
         const user = await db('user').insert({
             username: t.username,
             password: t.password,
@@ -50,8 +52,15 @@ export class UsersRepo implements UsersIRepo {
             creation: new Date().toLocaleString(),
             last_update: new Date().toLocaleString(),
             organization_id: t.organization_id,
-        }).then((resp) => {
-            return resp;
+        }).returning('id_user').then(async (id_user) => {
+            await db('user_usergroup_relation').insert({
+                user_id: id_user[0],
+                usergroup_id: t.class,
+                creation: moment().format(),
+                last_update: moment().format()
+            }).catch((err) => {
+                throw new HttpException(500,err.detail,'');
+            });
         }).catch((err) => {
             throw new HttpException(400,err.detail,'');
         });
@@ -64,6 +73,7 @@ export class UsersRepo implements UsersIRepo {
             username: t.username,
             password: t.password,
             email: t.email,
+            role: t.role,
             picture: t.picture,
             metadata: t.metadata,
             group_risk: t.group_risk,

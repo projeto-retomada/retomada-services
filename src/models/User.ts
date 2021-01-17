@@ -11,6 +11,7 @@ class User {
     public creation: string;
     public last_update: string;
     public organization_id: number;
+    public class: number;
 }
 
 export default User

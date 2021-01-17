@@ -52,6 +52,7 @@ export default class UserController {
                 const user = await this.usersRepo.save(this.userMapper.toPersistence(body)).then((err) => {});
                 return response.status(201).json(user);
             }catch (err) {
+                console.log(err);
                 next(new HttpException(err.status || 500, err.message || 'Unexpected error creating user', ''));
             }
         }

@@ -17,7 +17,8 @@ export class UserMapper implements Mapper<User, UserInput> {
             picture : user.picture,
             password : user.password,
             group_risk : user.group_risk,
-            metadata : user.metadata
+            metadata : user.metadata,
+            class: user.class
         };
         return userModel;
     }
@@ -32,6 +33,7 @@ export class UserMapper implements Mapper<User, UserInput> {
         user.password = userInput.password;
         user.group_risk = userInput.group_risk;
         user.metadata = userInput.metadata;
+        user.class = userInput.class;
         user.organization_id = userInput.organization_id;
         user.creation = moment().format();
         user.last_update = moment().format();

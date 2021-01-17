@@ -51,6 +51,10 @@ class UserInput {
     @IsNumber()
     @IsNotEmpty()
     organization_id: number;
+    
+    @IsNumber()
+    @IsNotEmpty()
+    class: number;
 }
 
 export default UserInput;
