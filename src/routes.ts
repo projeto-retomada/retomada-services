@@ -20,9 +20,16 @@ import QuestionnaireController from './controllers/QuestionnaireController';
 import { QuestionnaireRepo } from './repositories/questionnaire/QuestionnaireRepo';
 import { QuestionnaireMapper } from './mappers/QuestionnaireMapper';
 import QuestionnaireInput from './models/QuestionnaireInput';
+
 import { UsergroupRepo } from './repositories/usergroup/UsergroupRepo';
 import UsergroupInput from './models/UsergroupInput';
 import { UserUsergroupRelationRepo } from './repositories/userUsergroupRelation/UserUsergroupRelationRepo';
+
+
+import {ActivityController} from './controllers/ActivityController';
+import { ActivityRepo } from './repositories/activity/ActivityRepo';
+import { ActivityMapper } from './mappers/ActivityMapper';
+import ActivityInput from './models/ActivityInput';
 
 const routes = express.Router();
 
@@ -32,6 +39,8 @@ const organizationController = new OrganizationController(new OrganizationRepo()
 const placesController = new PlacesController(new PlacesRepo(new OrganizationRepo()));
 const questionnaireController = new QuestionnaireController(new QuestionnaireRepo(), new QuestionnaireMapper());
 const usergroupController = new UsergroupController(new UsergroupRepo(new OrganizationRepo()));
+const activityController = new ActivityController(new ActivityRepo(), new ActivityMapper());
+
 
 routes.get('/', (request, response) => {
     return response.send('200: OK');
@@ -71,5 +80,11 @@ routes.get('/organizations/:idOrganization/usergroups', usergroupController.get)
 routes.get('/organizations/:idOrganization/usergroups/:idUsergroup', usergroupController.get);
 routes.post('/organizations/:idOrganization/usergroups', validationMiddleware(UsergroupInput), usergroupController.create);
 routes.put('/organizations/:idOrganization/usergroups/:idUsergroup', validationMiddleware(UsergroupInput), usergroupController.update);
+
+// Activity routes
+routes.get('/activity/',  activityController.get);
+routes.post('/activity', authenticateMiddleware, validationMiddleware(ActivityInput), activityController.create);
+routes.put('/activity/:id', authenticateMiddleware, validationMiddleware(ActivityInput), activityController.update);
+routes.delete('/activity/:id', authenticateMiddleware, activityController.delete);
 
 export default routes;
