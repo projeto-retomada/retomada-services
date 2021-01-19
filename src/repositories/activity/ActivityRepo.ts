@@ -9,8 +9,9 @@ export class ActivityRepo implements ActivityIRepo {
     public async getActivities(condition: any) {
         console.log(condition);
         const quest = await db('activity')
-        .select('activity.*','place.name as place')
+        .select('activity.*','place.name as place', 'usergroup.name as usergroup')
         .join('place', 'activity.place_id', 'place.id_place')
+        .join('usergroup', 'activity.usergroup_id', 'usergroup.id_usergroup')
         .where(function() {
             if(condition.id)
                 this.where('id_activity', condition.id);
