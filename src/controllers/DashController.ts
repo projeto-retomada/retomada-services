@@ -36,4 +36,25 @@ export default class DashController {
         });
         return response.status(200).json({positive_admins: admins.length,total_admins:parseInt(userCount[0].count)});
     }
+
+    public getTimeSeriesCovid = async (request: Request, response: Response, next: NextFunction) => {
+        const data = await db('health_questionnaire').select('creation').count('id_health_quest as count')
+            .whereRaw("answer::json ->> 'testedPositive' = 'yes'")
+            .groupBy('creation')
+            .catch((err) => {
+                console.log(err);
+            next(new HttpException(500, 'Unexpected error getting users', err.sqlMessage));
+        });
+        const dados: any[] = data;
+        dados.forEach((element) => {
+            element.creation = element.creation.toISOString().substring(0, 10);
+            console.log(element);
+        });
+        var result = Object.values(dados.reduce((r, o) => {
+            r[o.creation] = r[o.creation] || {creation: o.creation, count : 0};
+            r[o.creation].count += +o.count;
+            return r;
+        },{}));
+        return response.status(200).json(result);
+    }
 }
