@@ -20,10 +20,17 @@ import QuestionnaireController from './controllers/QuestionnaireController';
 import { QuestionnaireRepo } from './repositories/questionnaire/QuestionnaireRepo';
 import { QuestionnaireMapper } from './mappers/QuestionnaireMapper';
 import QuestionnaireInput from './models/QuestionnaireInput';
+
 import { UsergroupRepo } from './repositories/usergroup/UsergroupRepo';
 import UsergroupInput from './models/UsergroupInput';
 import { UserUsergroupRelationRepo } from './repositories/userUsergroupRelation/UserUsergroupRelationRepo';
 import DashController from './controllers/DashController';
+
+
+import {ActivityController} from './controllers/ActivityController';
+import { ActivityRepo } from './repositories/activity/ActivityRepo';
+import { ActivityMapper } from './mappers/ActivityMapper';
+import ActivityInput from './models/ActivityInput';
 
 const routes = express.Router();
 
@@ -34,6 +41,8 @@ const placesController = new PlacesController(new PlacesRepo(new OrganizationRep
 const questionnaireController = new QuestionnaireController(new QuestionnaireRepo(), new QuestionnaireMapper());
 const usergroupController = new UsergroupController(new UsergroupRepo(new OrganizationRepo()));
 const dashController = new DashController();
+const activityController = new ActivityController(new ActivityRepo(), new ActivityMapper());
+
 
 routes.get('/', (request, response) => {
     return response.send('200: OK');
@@ -78,5 +87,10 @@ routes.put('/organizations/:idOrganization/usergroups/:idUsergroup', validationM
 routes.get('/dash/positive-students', dashController.getStudentPositiveCount);
 routes.get('/dash/positive-teachers', dashController.getTeacherPositiveCount);
 routes.get('/dash/positive-admins', dashController.getAdminPositiveCount);
+// Activity routes
+routes.get('/activity/',  activityController.get);
+routes.post('/activity', authenticateMiddleware, validationMiddleware(ActivityInput), activityController.create);
+routes.put('/activity/:id', authenticateMiddleware, validationMiddleware(ActivityInput), activityController.update);
+routes.delete('/activity/:id', authenticateMiddleware, activityController.delete);
 
 export default routes;
