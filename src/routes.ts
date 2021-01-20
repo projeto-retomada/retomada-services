@@ -2,7 +2,7 @@ import { UsergroupController } from './controllers/UsergroupController';
 import { PlaceInput } from './models/PlaceInput';
 import express from 'express';
 import LoginController from './controllers/LoginController';
-import {authenticateMiddleware, validationMiddleware} from './error/ValidationMiddleware';
+import { authenticateMiddleware, validationMiddleware } from './error/ValidationMiddleware';
 
 import UserController from './controllers/UserController';
 import { UsersRepo } from './repositories/users/UsersRepo';
@@ -27,21 +27,28 @@ import { UserUsergroupRelationRepo } from './repositories/userUsergroupRelation/
 import DashController from './controllers/DashController';
 
 
-import {ActivityController} from './controllers/ActivityController';
+import { ActivityController } from './controllers/ActivityController';
 import { ActivityRepo } from './repositories/activity/ActivityRepo';
 import { ActivityMapper } from './mappers/ActivityMapper';
 import ActivityInput from './models/ActivityInput';
 
+import { ActivityInteractionController } from './controllers/ActivityInteractionController';
+import { ActivityInteractionRepo } from './repositories/activityInteraction/ActivityInteractionRepo';
+import { ActivityInteractionMapper } from './mappers/ActivityInteractionMapper';
+import ActivityInteractionInput from './models/ActivityInteractionInput';
+
 const routes = express.Router();
 
-const userController = new UserController(new UsersRepo(new UserUsergroupRelationRepo),new UserMapper());
-const loginController = new LoginController(new UsersRepo(new UserUsergroupRelationRepo),new UserMapper(), new OrganizationRepo());
+const userController = new UserController(new UsersRepo(new UserUsergroupRelationRepo), new UserMapper());
+const loginController = new LoginController(new UsersRepo(new UserUsergroupRelationRepo), new UserMapper(), new OrganizationRepo());
 const organizationController = new OrganizationController(new OrganizationRepo(), new OrganizationMapper());
 const placesController = new PlacesController(new PlacesRepo(new OrganizationRepo()));
 const questionnaireController = new QuestionnaireController(new QuestionnaireRepo(), new QuestionnaireMapper());
 const usergroupController = new UsergroupController(new UsergroupRepo(new OrganizationRepo()));
 const dashController = new DashController();
 const activityController = new ActivityController(new ActivityRepo(), new ActivityMapper());
+const activityInteractionController = new ActivityInteractionController(new ActivityInteractionRepo(), new ActivityInteractionMapper());
+
 
 
 routes.get('/', (request, response) => {
@@ -71,8 +78,8 @@ routes.put('/organizations/:idOrganization/places/:idPlace', validationMiddlewar
 routes.delete('/organizations/:idOrganization/places/:idPlace', placesController.delete);
 
 // Questionnaire routes
-routes.get('/questionnaire/',  questionnaireController.getByParameters);
-routes.get('/questionnaire/:role/:idOrganization',authenticateMiddleware,  questionnaireController.getAllQuestsByRole);
+routes.get('/questionnaire/', questionnaireController.getByParameters);
+routes.get('/questionnaire/:role/:idOrganization', authenticateMiddleware, questionnaireController.getAllQuestsByRole);
 routes.post('/questionnaire', authenticateMiddleware, validationMiddleware(QuestionnaireInput), questionnaireController.create);
 routes.put('/questionnaire/:id', authenticateMiddleware, validationMiddleware(QuestionnaireInput), questionnaireController.update);
 routes.delete('/questionnaire/:id', authenticateMiddleware, questionnaireController.delete);
@@ -88,10 +95,18 @@ routes.get('/dash/positive-students', dashController.getStudentPositiveCount);
 routes.get('/dash/positive-teachers', dashController.getTeacherPositiveCount);
 routes.get('/dash/positive-admins', dashController.getAdminPositiveCount);
 routes.get('/dash/covid-timeseries', dashController.getTimeSeriesCovid);
+
+
 // Activity routes
-routes.get('/activity/',  activityController.get);
+routes.get('/activity/', activityController.get);
 routes.post('/activity', authenticateMiddleware, validationMiddleware(ActivityInput), activityController.create);
 routes.put('/activity/:id', authenticateMiddleware, validationMiddleware(ActivityInput), activityController.update);
 routes.delete('/activity/:id', authenticateMiddleware, activityController.delete);
+
+// Activity Interaction
+routes.get('/interaction/:id', activityInteractionController.get);
+routes.post('/interaction', authenticateMiddleware, validationMiddleware(ActivityInteractionInput), activityInteractionController.create);
+routes.put('/interaction/:id', authenticateMiddleware, validationMiddleware(ActivityInteractionInput), activityInteractionController.update);
+routes.delete('/interaction/:id', authenticateMiddleware, activityInteractionController.delete);
 
 export default routes;
