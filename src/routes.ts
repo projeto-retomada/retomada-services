@@ -88,6 +88,8 @@ routes.get('/dash/positive-students', dashController.getStudentPositiveCount);
 routes.get('/dash/positive-teachers', dashController.getTeacherPositiveCount);
 routes.get('/dash/positive-admins', dashController.getAdminPositiveCount);
 routes.get('/dash/covid-timeseries', dashController.getTimeSeriesCovid);
+routes.get('/dash/last-students-cases', dashController.getLastStudentsCases);
+routes.get('/dash/last-teachers-cases', dashController.getLastTeachersCases);
 // Activity routes
 routes.get('/activity/',  activityController.get);
 routes.post('/activity', authenticateMiddleware, validationMiddleware(ActivityInput), activityController.create);
