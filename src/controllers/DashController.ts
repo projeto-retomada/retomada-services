@@ -96,4 +96,13 @@ export default class DashController {
         });
         return response.status(200).json(filter);
     }
+
+    public getCasesByUsergroup = async (request: Request, response: Response, next: NextFunction) => {
+        const data = await db.raw("WITH t1 as(SELECT count(DISTINCT health_questionnaire.user_id) casos, usergroup_id FROM public.health_questionnaire INNER JOIN public.user_usergroup_relation ON public.user_usergroup_relation.user_id = public.health_questionnaire.user_id WHERE answer::json ->> 'testedPositive' = 'yes'group by usergroup_id) SELECT t1.*, name FROM public.usergroup INNER JOIN t1 ON public.usergroup.id_usergroup = t1.usergroup_id")
+        .catch((err) => {
+            console.log(err);
+            next(new HttpException(500, 'Unexpected error getting users', err.sqlMessage));
+        });
+        return response.status(200).json(data.rows);
+    }
 }
