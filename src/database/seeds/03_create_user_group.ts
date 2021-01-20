@@ -38,6 +38,54 @@ export async function seed(knex: Knex) {
             creation: '2020-10-10 10:00:00',last_update: '2020-10-10 10:00:00',
             organization_id: '1'
         },
+        {
+            id_usergroup: '7', name: 'TURMA 7',
+            class_schedule: '',
+            creation: '2020-10-10 10:00:00',last_update: '2020-10-10 10:00:00',
+            organization_id: '1'
+        },
+        {
+            id_usergroup: '8', name: 'TURMA 8',
+            class_schedule: '',
+            creation: '2020-10-10 10:00:00',last_update: '2020-10-10 10:00:00',
+            organization_id: '1'
+        },
+        {
+            id_usergroup: '9', name: 'TURMA 9',
+            class_schedule: '',
+            creation: '2020-10-10 10:00:00',last_update: '2020-10-10 10:00:00',
+            organization_id: '1'
+        },
+        {
+            id_usergroup: '10', name: 'TURMA 10',
+            class_schedule: '',
+            creation: '2020-10-10 10:00:00',last_update: '2020-10-10 10:00:00',
+            organization_id: '1'
+        },
+        {
+            id_usergroup: '11', name: 'TURMA 11',
+            class_schedule: '',
+            creation: '2020-10-10 10:00:00',last_update: '2020-10-10 10:00:00',
+            organization_id: '1'
+        },
+        {
+            id_usergroup: '12', name: 'TURMA 12',
+            class_schedule: '',
+            creation: '2020-10-10 10:00:00',last_update: '2020-10-10 10:00:00',
+            organization_id: '1'
+        },
+        {
+            id_usergroup: '13', name: 'TURMA 13',
+            class_schedule: '',
+            creation: '2020-10-10 10:00:00',last_update: '2020-10-10 10:00:00',
+            organization_id: '1'
+        },
+        {
+            id_usergroup: '14', name: 'TURMA 14',
+            class_schedule: '',
+            creation: '2020-10-10 10:00:00',last_update: '2020-10-10 10:00:00',
+            organization_id: '1'
+        },
         
     ]);
 }

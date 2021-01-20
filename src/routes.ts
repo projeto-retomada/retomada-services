@@ -24,6 +24,7 @@ import QuestionnaireInput from './models/QuestionnaireInput';
 import { UsergroupRepo } from './repositories/usergroup/UsergroupRepo';
 import UsergroupInput from './models/UsergroupInput';
 import { UserUsergroupRelationRepo } from './repositories/userUsergroupRelation/UserUsergroupRelationRepo';
+import DashController from './controllers/DashController';
 
 
 import {ActivityController} from './controllers/ActivityController';
@@ -39,6 +40,7 @@ const organizationController = new OrganizationController(new OrganizationRepo()
 const placesController = new PlacesController(new PlacesRepo(new OrganizationRepo()));
 const questionnaireController = new QuestionnaireController(new QuestionnaireRepo(), new QuestionnaireMapper());
 const usergroupController = new UsergroupController(new UsergroupRepo(new OrganizationRepo()));
+const dashController = new DashController();
 const activityController = new ActivityController(new ActivityRepo(), new ActivityMapper());
 
 
@@ -81,6 +83,11 @@ routes.get('/organizations/:idOrganization/usergroups/:idUsergroup', usergroupCo
 routes.post('/organizations/:idOrganization/usergroups', validationMiddleware(UsergroupInput), usergroupController.create);
 routes.put('/organizations/:idOrganization/usergroups/:idUsergroup', validationMiddleware(UsergroupInput), usergroupController.update);
 
+// Dash Routes
+routes.get('/dash/positive-students', dashController.getStudentPositiveCount);
+routes.get('/dash/positive-teachers', dashController.getTeacherPositiveCount);
+routes.get('/dash/positive-admins', dashController.getAdminPositiveCount);
+routes.get('/dash/covid-timeseries', dashController.getTimeSeriesCovid);
 // Activity routes
 routes.get('/activity/',  activityController.get);
 routes.post('/activity', authenticateMiddleware, validationMiddleware(ActivityInput), activityController.create);
