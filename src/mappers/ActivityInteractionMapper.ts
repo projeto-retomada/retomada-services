@@ -20,6 +20,7 @@ export class ActivityInteractionMapper implements Mapper<ActivityInteracion, Act
         activityInteracion.user_id = i.user_id;
         activityInteracion.activity_id = i.activity_id;
         activityInteracion.creation = moment().format();
+        activityInteracion.last_update = moment().format();
         return activityInteracion;
     }
 

@@ -34,9 +34,11 @@ export class ActivityInteractionRepo implements ActivityInteractionIRepo {
             user_id: t.user_id,
             activity_id: t.activity_id,
             creation: new Date().toLocaleString(),
+            last_update: new Date().toLocaleString(),
         }).then((resp) => {
             return resp;
         }).catch((err) => {
+            console.log(err);
             throw new Error(err.detail);
         });
 
@@ -48,6 +50,7 @@ export class ActivityInteractionRepo implements ActivityInteractionIRepo {
             creation: t.creation,
             user_id: t.user_id,
             activity_id: t.activity_id,
+            last_update: new Date().toLocaleString(),
         }).then(async (resp) => {
             const quest = await db('activity_interaction').select('*').where({ id: id }).catch((err) => {
                 throw new Error(err.detail);

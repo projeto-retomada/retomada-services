@@ -34,7 +34,7 @@ export class ActivityInteractionController {
     public create = async (request: Request, response: Response, next: NextFunction) => {
 
         const body = request.body;
-
+        console.log(body);
         if (body) {
             try {
                 const activity = await this.activityInteractionRepo.save(this.activityInteractionMapper.toPersistence(body)).then((err) => { });
