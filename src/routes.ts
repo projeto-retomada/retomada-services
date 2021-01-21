@@ -98,6 +98,8 @@ routes.get('/dash/covid-timeseries', dashController.getTimeSeriesCovid);
 routes.get('/dash/last-students-cases', dashController.getLastStudentsCases);
 routes.get('/dash/last-teachers-cases', dashController.getLastTeachersCases);
 routes.get('/dash/cases-by-usergroup', dashController.getCasesByUsergroup);
+routes.get('/dash/activities-student', dashController.getLastActivitiesStudent);
+routes.get('/dash/activities-teacher', dashController.getLastActivitiesTeacher);
 
 // Activity routes
 routes.get('/activity/', activityController.get);
